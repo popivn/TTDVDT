@@ -31,7 +31,7 @@ export interface LoginResponse {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5217/api/auth';
+  private apiUrl = 'api/auth';
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request);
