@@ -1,0 +1,57 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Đăng Nhập</h2>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+          placeholder="Nhập email của bạn"
+        />
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email là bắt buộc</span>
+          <span *ngIf="email?.errors?.['email']">Email không hợp lệ</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.invalid]="password?.invalid && password?.touched"
+          placeholder="Nhập mật khẩu"
+        />
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Mật khẩu là bắt buộc</span>
+          <span *ngIf="password?.errors?.['minlength']">Mật khẩu phải có ít nhất 6 ký tự</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isLoading || loginForm.invalid"
+      >
+        <span *ngIf="!isLoading">Đăng Nhập</span>
+        <span *ngIf="isLoading">Đang xử lý...</span>
+      </button>
+    </form>
+
+    <div class="register-link">
+      <p>Chưa có tài khoản? <a routerLink="/register">Đăng ký ngay</a></p>
+    </div>
+  </div>
+</div>
+

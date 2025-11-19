@@ -1,0 +1,93 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Đăng Ký</h2>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-group">
+        <label for="name">Họ và Tên</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.invalid]="name?.invalid && name?.touched"
+          placeholder="Nhập họ và tên của bạn"
+        />
+        <div class="error-message" *ngIf="name?.invalid && name?.touched">
+          <span *ngIf="name?.errors?.['required']">Họ và tên là bắt buộc</span>
+          <span *ngIf="name?.errors?.['minlength']">Họ và tên phải có ít nhất 3 ký tự</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+          placeholder="Nhập email của bạn"
+        />
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email là bắt buộc</span>
+          <span *ngIf="email?.errors?.['email']">Email không hợp lệ</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.invalid]="password?.invalid && password?.touched"
+          placeholder="Nhập mật khẩu"
+        />
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Mật khẩu là bắt buộc</span>
+          <span *ngIf="password?.errors?.['minlength']">Mật khẩu phải có ít nhất 6 ký tự</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Xác nhận Mật khẩu</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          class="form-control"
+          [class.invalid]="confirmPassword?.invalid && confirmPassword?.touched"
+          placeholder="Nhập lại mật khẩu"
+        />
+        <div class="error-message" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+          <span *ngIf="confirmPassword?.errors?.['required']">Xác nhận mật khẩu là bắt buộc</span>
+          <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">Mật khẩu không khớp</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isLoading || registerForm.invalid"
+      >
+        <span *ngIf="!isLoading">Đăng Ký</span>
+        <span *ngIf="isLoading">Đang xử lý...</span>
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p>Đã có tài khoản? <a routerLink="/login">Đăng nhập ngay</a></p>
+    </div>
+  </div>
+</div>
+

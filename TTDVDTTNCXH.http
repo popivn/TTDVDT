@@ -1,0 +1,6 @@
+@TTDVDTTNCXH_HostAddress = http://localhost:5217
+
+GET {{TTDVDTTNCXH_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

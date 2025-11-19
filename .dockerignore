@@ -1,0 +1,59 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular build
+ClientApp/TTDVDTTNCXHClient/dist/
+ClientApp/TTDVDTTNCXHClient/.angular/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+README.md
+*.md
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+appsettings.Development.json
+
+# Test files
+*.test.*
+*.spec.*
+
