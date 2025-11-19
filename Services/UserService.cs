@@ -50,6 +50,41 @@ namespace TTDVDTTNCXH.Services
             };
         }
 
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        {
+            // Tìm user theo email
+            var user = await _userRepository.GetByEmailAsync(request.Email);
+            
+            if (user == null)
+            {
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "Email hoặc mật khẩu không đúng"
+                };
+            }
+
+            // Hash password để so sánh
+            var hashedPassword = HashPassword(request.Password);
+            
+            if (user.Password != hashedPassword)
+            {
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "Email hoặc mật khẩu không đúng"
+                };
+            }
+
+            return new LoginResponse
+            {
+                Success = true,
+                Message = "Đăng nhập thành công",
+                UserId = user.Id,
+                Token = null // TODO: Implement JWT token
+            };
+        }
+
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
