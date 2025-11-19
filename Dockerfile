@@ -41,8 +41,16 @@
       (test -d src && echo "✓ src/ directory" || echo "✗ src/ directory") && \
       (test -f angular.json && echo "✓ angular.json" || echo "✗ angular.json")
   
-  # Build Angular
-  RUN npm run build
+# Build Angular
+RUN npm run build
+
+# Debug: Kiểm tra dist output path
+RUN echo "=== CHECKING DIST OUTPUT ===" && \
+    find /app/ClientApp/dist -type f -name "index.html" 2>/dev/null | head -1 && \
+    echo "--- Dist structure ---" && \
+    ls -la /app/ClientApp/dist/ 2>/dev/null || echo "dist/ not found" && \
+    (test -d /app/ClientApp/dist/TTDVDTTNCXHClient && echo "✓ dist/TTDVDTTNCXHClient exists" || echo "✗ dist/TTDVDTTNCXHClient not found") && \
+    (test -d /app/ClientApp/dist/TTDVDTTNCXHClient/browser && echo "✓ dist/TTDVDTTNCXHClient/browser exists" || echo "✗ dist/TTDVDTTNCXHClient/browser not found")
   
   # -------------------------
   # Stage 2: Build .NET Backend
@@ -57,10 +65,9 @@
   # Copy toàn bộ source code backend
   COPY . ./
   
-  # Copy Angular build output vào wwwroot
-  # Angular 20+ output: dist/ClientApp/browser (hoặc dist/browser tùy angular.json)
-  # Kiểm tra output path trong angular.json để xác định đúng đường dẫn
-  COPY --from=angular-build /app/ClientApp/dist/ClientApp/browser ./wwwroot
+# Copy Angular build output vào wwwroot
+# Angular 20+ output: dist/TTDVDTTNCXHClient/browser (project name trong angular.json)
+COPY --from=angular-build /app/ClientApp/dist/TTDVDTTNCXHClient/browser ./wwwroot
   
   # Build & publish WebAPI
   RUN dotnet publish -c Release -o /app/publish
