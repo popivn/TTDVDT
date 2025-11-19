@@ -8,13 +8,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Thêm dịch vụ cho controllers
 builder.Services.AddControllers();
-builder.Services.AddCors(); // cho dev server Angular gọi API
+
+// Cấu hình CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Đăng ký DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 33)) // MySQL version
+        new MySqlServerVersion(new Version(8, 0, 33))
     )
 );
 
@@ -26,18 +36,15 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
-// Enable CORS nếu Angular dev server chạy port khác
-app.UseCors(policy => policy
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+// Quan trọng: CORS phải được gọi TRƯỚC UseHttpsRedirection và UseStaticFiles
+app.UseCors();
 
 // HTTPS redirection
 app.UseHttpsRedirection();
 
 // Phục vụ static files Angular
-app.UseDefaultFiles(); // index.html
-app.UseStaticFiles();  // css, js, assets
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // Map controllers
 app.MapControllers();

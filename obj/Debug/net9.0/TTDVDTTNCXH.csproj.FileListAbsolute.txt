@@ -1,11 +1,5 @@
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\appsettings.Development.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\appsettings.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\angular.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\package-lock.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\package.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\tsconfig.app.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\tsconfig.json
-C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\TTDVDTTNCXHClient\tsconfig.spec.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\TTDVDTTNCXH.staticwebassets.endpoints.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\TTDVDTTNCXH.exe
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\TTDVDTTNCXH.deps.json
@@ -125,3 +119,10 @@ C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspa
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\appsettings.Production.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\angular.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\package-lock.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\package.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\tsconfig.app.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\tsconfig.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\tsconfig.spec.json
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\TTDVDTTNCXH.sourcelink.json
