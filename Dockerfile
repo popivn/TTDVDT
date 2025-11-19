@@ -1,24 +1,5 @@
 # -------------------------
-# Stage 1: Build Angular Frontend
-# -------------------------
-FROM node:20-alpine AS angular-build
-
-WORKDIR /app/ClientApp
-
-# Copy package files để tận dụng Docker cache
-COPY ClientApp/package*.json ./
-
-# Install dependencies
-RUN npm install --legacy-peer-deps
-
-# Copy source code
-COPY ClientApp/ ./
-
-# Build Angular (outputPath: ../wwwroot)
-RUN npm run build
-
-# -------------------------
-# Stage 2: Build .NET Backend
+# Stage 1: Build .NET Backend
 # -------------------------
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dotnet-build
 WORKDIR /app
@@ -38,14 +19,14 @@ COPY Migrations/ ./Migrations/
 COPY Program.cs ./
 COPY appsettings*.json ./
 
-# Copy Angular build output vào wwwroot
-COPY --from=angular-build /app/wwwroot ./wwwroot
+# Copy Angular build output đã build sẵn ở local
+COPY wwwroot/ ./wwwroot/
 
 # Build & publish
 RUN dotnet publish -c Release -o /app/publish
 
 # -------------------------
-# Stage 3: Runtime
+# Stage 2: Runtime
 # -------------------------
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
