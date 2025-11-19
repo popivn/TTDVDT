@@ -3,6 +3,8 @@ using TTDVDTTNCXH.Data;
 using TTDVDTTNCXH.Models;
 using TTDVDTTNCXH.Repositories;
 using TTDVDTTNCXH.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,9 +44,28 @@ app.UseCors();
 // HTTPS redirection
 app.UseHttpsRedirection();
 
-// Phục vụ static files Angular
-app.UseDefaultFiles();
-app.UseStaticFiles();
+// Phục vụ static files Angular từ wwwroot/browser
+var browserPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "browser");
+if (Directory.Exists(browserPath))
+{
+    app.UseDefaultFiles(new DefaultFilesOptions
+    {
+        FileProvider = new PhysicalFileProvider(browserPath),
+        RequestPath = ""
+    });
+    
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(browserPath),
+        RequestPath = ""
+    });
+}
+else
+{
+    // Fallback: serve từ wwwroot root nếu không có browser subfolder
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+}
 
 // Map controllers
 app.MapControllers();
@@ -70,15 +91,23 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast");
 
 // Fallback SPA routing
-var indexPath = Path.Combine("wwwroot", "index.html");
+var indexPath = Path.Combine("wwwroot", "browser", "index.html");
 if (File.Exists(indexPath))
 {
-    app.MapFallbackToFile("index.html");
+    app.MapFallbackToFile("index.html", new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "browser")),
+        RequestPath = ""
+    });
 }
 else
 {
     // Fallback for development
-    app.MapFallbackToFile(Path.Combine("ClientApp", "TTDVDTTNCXHClient", "dist", "TTDVDTTNCXHClient", "index.html"));
+    var devPath = Path.Combine("ClientApp", "dist", "TTDVDTTNCXHClient", "browser", "index.html");
+    if (File.Exists(devPath))
+    {
+        app.MapFallbackToFile(devPath);
+    }
 }
 
 app.Run();
