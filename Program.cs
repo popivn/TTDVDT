@@ -33,9 +33,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Đăng ký Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISettingRepository, SettingRepository>();
 
 // Đăng ký Service
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISettingService, SettingService>();
 
 var app = builder.Build();
 

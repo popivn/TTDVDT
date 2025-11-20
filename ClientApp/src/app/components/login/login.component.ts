@@ -45,8 +45,8 @@ export class LoginComponent {
             if (response.token) {
               localStorage.setItem('token', response.token);
             }
-            // Chuyển hướng đến trang chủ hoặc dashboard
-            this.router.navigate(['/']);
+            // Chuyển hướng đến trang chủ
+            this.router.navigate(['/home']);
           } else {
             this.errorMessage = response.message || 'Đăng nhập thất bại';
           }

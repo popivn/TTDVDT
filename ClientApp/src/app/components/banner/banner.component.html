@@ -1,0 +1,83 @@
+<section class="relative py-16 px-4 overflow-hidden min-h-[500px]">
+  <!-- Background Slider -->
+  <div class="absolute inset-0 top-0 left-0 w-full h-full">
+    <div 
+      *ngFor="let image of slideImages; let i = index" 
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out"
+      [style.background-image]="'url(' + image + ')'"
+      [class.z-0]="i !== currentSlideIndex"
+      [class.z-10]="i === currentSlideIndex"
+      [style.opacity]="i === currentSlideIndex ? '1' : '0'">
+    </div>
+    <!-- Overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="container mx-auto max-w-6xl relative z-20">
+    <div class="flex flex-col lg:flex-row items-center gap-8">
+      <!-- Illustration -->
+      <div class="flex-1 flex justify-center lg:justify-start select-none pointer-events-none">
+        <div class="w-full max-w-md flex justify-center items-center h-full">
+          <img 
+            *ngIf="logo" 
+            [src]="logo" 
+            alt="Logo" 
+            class="max-h-48 w-auto mx-auto"
+            style="
+              object-fit: contain;
+              filter: 
+                drop-shadow(0 10px 20px rgba(0,0,0,0.3))
+                drop-shadow(0 6px 12px rgba(0,0,0,0.2))
+                drop-shadow(-5px -5px 15px rgba(255,255,255,0.1));
+              transform: 
+                perspective(1000px) 
+                rotateX(5deg) 
+                rotateY(-5deg) 
+                translateZ(20px);
+              transition: all 0.3s ease;
+              background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+              padding: 1rem;
+              border-radius: 0.5rem;
+              box-shadow: 
+                0 20px 40px rgba(0,0,0,0.2),
+                inset 0 2px 4px rgba(255,255,255,0.5),
+                inset 0 -2px 4px rgba(0,0,0,0.1);
+            "
+            onmouseover="this.style.transform='perspective(1000px) rotateX(-2deg) rotateY(3deg) translateZ(30px) scale(1.05)'"
+            onmouseout="this.style.transform='perspective(1000px) rotateX(5deg) rotateY(-5deg) translateZ(20px)'"
+          />
+        </div>
+      </div>
+
+      <!-- Text Content -->
+      <div class="flex-1 text-center lg:text-left text-white">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">
+          Nâng cao kỹ năng - Vững bước tương lai
+        </h2>
+        <p class="text-lg lg:text-xl mb-8 text-green-50">
+          Khám phá các khóa học chất lượng cao được thiết kế cho sự thành công của bạn.
+        </p>
+        <button 
+          (click)="onExploreCourses()"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-lg">
+          Khám phá các khóa học
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide Indicators -->
+  <div *ngIf="slideImages.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+    <button
+      *ngFor="let image of slideImages; let i = index"
+      (click)="goToSlide(i)"
+      class="w-3 h-3 rounded-full transition-all duration-300"
+      [class.bg-white]="i === currentSlideIndex"
+      [class.bg-white-50]="i !== currentSlideIndex"
+      [class.opacity-50]="i !== currentSlideIndex"
+      [attr.aria-label]="'Go to slide ' + (i + 1)">
+    </button>
+  </div>
+</section>
+
