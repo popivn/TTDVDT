@@ -1,36 +1,112 @@
 <div>
     <app-banner></app-banner>
 
-    <!-- Service Cards Section -->
-    <section class="py-12 px-4 bg-gray-50">
+    <!-- Service Cards Section - Đè lên banner -->
+    <section class="z-10 py-12 px-4 bg-gray-50">
       <div class="container mx-auto max-w-6xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          <!-- Đăng ký tư vấn -->
-          <app-service-card title="Đăng ký tư vấn">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+        <!-- Loading State -->
+        <div *ngIf="loadingClassrooms" class="text-center py-8">
+          <p class="text-gray-600">Đang tải phòng học...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="classroomError && !loadingClassrooms" class="text-center py-8">
+          <p class="text-red-600">{{ classroomError }}</p>
+        </div>
+
+        <!-- Classrooms Slider -->
+        <div *ngIf="!loadingClassrooms && !classroomError && classrooms.length > 0" class="relative">
+          <!-- Navigation Buttons -->
+          <button
+            (click)="previousClassrooms()"
+            [disabled]="!canGoPrevious() || isTransitioning"
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Phòng trước"
+            type="button"
+          >
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-          </app-service-card>
-          <!-- Câu hỏi thường gặp -->
-          <app-service-card title="Câu hỏi thường gặp">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </button>
+          
+          <button
+            (click)="nextClassrooms()"
+            [disabled]="!canGoNext() || isTransitioning"
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Phòng tiếp theo"
+            type="button"
+          >
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-          </app-service-card>
+          </button>
+
+          <!-- Carousel Container -->
+          <div class="overflow-hidden px-12">
+            <div 
+              #carouselContainer
+              class="flex gap-6"
+              [ngClass]="{
+                'transition-transform duration-500 ease-in-out': !resetInProgress
+              }"
+              [style.transform]="getTransformStyle()"
+            >
+              <div
+                *ngFor="let classroom of displayedClassrooms; let i = index"
+                class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 w-[280px] flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105"
+              >
+                <img
+                  [src]="classroom?.imageUrl || 'assets/images/no-image.png'"
+                  [alt]="classroom?.classroomName || 'Phòng học'"
+                  class="h-48 w-full object-cover rounded mb-4"
+                />
+                <h3 class="text-lg font-semibold text-gray-800 text-center px-2">
+                  {{ classroom?.classroomName }}
+                </h3>
+                <p *ngIf="classroom?.description" class="text-sm text-gray-600 text-center mt-2 px-2 line-clamp-2">
+                  {{ classroom.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loadingClassrooms && !classroomError && classrooms.length === 0" class="text-center py-8">
+          <p class="text-gray-600">Chưa có phòng học nào được hiển thị.</p>
         </div>
       </div>
     </section>
 
-    <!-- Featured Courses Section -->
-    <section id="courses" class="py-12 px-4">
+    <!-- Featured Faculties Section -->
+    <section id="faculties" class="py-12 px-4">
       <div class="container mx-auto max-w-6xl">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Các Khóa Học Nổi Bật</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Các Khoa Nổi Bật</h2>
+        
+        <!-- Loading State -->
+        <div *ngIf="loading" class="text-center py-8">
+          <p class="text-gray-600">Đang tải dữ liệu...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="text-center py-8">
+          <p class="text-red-600">{{ error }}</p>
+        </div>
+        
+        <!-- Faculties Grid - 3 columns per row -->
+        <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <app-course-card
-            *ngFor="let course of courses"
-            [title]="course.title"
-            [description]="course.description">
+            *ngFor="let faculty of faculties"
+            [title]="faculty.facultyName"
+            [description]="faculty.description || ''"
+            [imageUrl]="faculty.imageUrl"
+            [imageAlt]="faculty.facultyName">
           </app-course-card>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="!loading && !error && faculties.length === 0" class="text-center py-8">
+          <p class="text-gray-600">Chưa có khoa nào được hiển thị.</p>
         </div>
       </div>
     </section>

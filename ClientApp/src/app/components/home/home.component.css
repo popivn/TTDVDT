@@ -1,2 +1,11 @@
 /* Component-specific styles if needed */
 
+/* Carousel styles */
+.overflow-hidden {
+  -webkit-overflow-scrolling: touch;
+}
+
+.flex {
+  will-change: transform;
+}
+

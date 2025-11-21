@@ -14,5 +14,12 @@ namespace TTDVDTTNCXH.Data
         public DbSet<Course> Courses { get; set; } // bảng Courses
         public DbSet<Event> Events { get; set; } // bảng Events
         public DbSet<Setting> Settings { get; set; } // bảng Settings
+        public DbSet<Faculty> Faculties { get; set; } // bảng Faculties
+        public DbSet<Classroom> Classrooms { get; set; } // bảng Classrooms
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

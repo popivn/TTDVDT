@@ -3,13 +3,25 @@ using TTDVDTTNCXH.Data;
 using TTDVDTTNCXH.Models;
 using TTDVDTTNCXH.Repositories;
 using TTDVDTTNCXH.Services;
+using TTDVDTTNCXH.Commands;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 
+// Check if we're running seed command
+if (args.Length > 0 && args[0] == "seed")
+{
+    await SeedCommand.InvokeAsync(args);
+    return;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Thêm dịch vụ cho controllers
-builder.Services.AddControllers();
+// Thêm dịch vụ cho controllers với cấu hình JSON camelCase
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 
 // Cấu hình CORS
 builder.Services.AddCors(options =>
@@ -34,10 +46,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Đăng ký Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISettingRepository, SettingRepository>();
+builder.Services.AddScoped<IFacultyRepository, FacultyRepository>();
+builder.Services.AddScoped<IClassroomRepository, ClassroomRepository>();
 
 // Đăng ký Service
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISettingService, SettingService>();
+builder.Services.AddScoped<IFacultyService, FacultyService>();
+builder.Services.AddScoped<IClassroomService, ClassroomService>();
 
 var app = builder.Build();
 
