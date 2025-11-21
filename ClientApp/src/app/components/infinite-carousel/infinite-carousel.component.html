@@ -1,0 +1,61 @@
+<div class="relative" *ngIf="items.length > 0">
+  <!-- Navigation Buttons -->
+  <button
+    *ngIf="showNavigation"
+    (click)="previousItems()"
+    [disabled]="!canGoPrevious() || isTransitioning"
+    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+    aria-label="Trước"
+    type="button"
+  >
+    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </button>
+  
+  <button
+    *ngIf="showNavigation"
+    (click)="nextItems()"
+    [disabled]="!canGoNext() || isTransitioning"
+    class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+    aria-label="Tiếp theo"
+    type="button"
+  >
+    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </button>
+
+  <!-- Carousel Container -->
+  <div class="overflow-hidden px-12">
+    <div 
+      #carouselContainer
+      class="flex gap-6"
+      [ngClass]="{
+        'transition-transform duration-500 ease-in-out': !resetInProgress
+      }"
+      [style.transform]="getTransformStyle()"
+    >
+      <div
+        *ngFor="let item of displayedItems; let i = index"
+        class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105"
+        [style.width.px]="cardWidth"
+      >
+        <img
+          [src]="item?.imageUrl || 'assets/images/no-image.png'"
+          [alt]="item?.name || 'Item'"
+          class="h-48 w-full object-cover rounded mb-4"
+        />
+        <h3 class="text-lg font-semibold text-gray-800 text-center px-2">
+          {{ item?.name }}
+        </h3>
+        <p *ngIf="item?.description" class="text-sm text-gray-600 text-center mt-2 px-2 line-clamp-2">
+          {{ item.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

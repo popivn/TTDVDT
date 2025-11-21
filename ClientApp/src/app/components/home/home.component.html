@@ -1,8 +1,8 @@
 <div>
     <app-banner></app-banner>
 
-    <!-- Service Cards Section - Đè lên banner -->
-    <section class="z-10 py-12 px-4 bg-gray-50">
+    <!-- Service Cards Section -->
+    <section class="py-12 px-4 bg-gray-50">
       <div class="container mx-auto max-w-6xl">
         <!-- Loading State -->
         <div *ngIf="loadingClassrooms" class="text-center py-8">
@@ -14,65 +14,18 @@
           <p class="text-red-600">{{ classroomError }}</p>
         </div>
 
-        <!-- Classrooms Slider -->
-        <div *ngIf="!loadingClassrooms && !classroomError && classrooms.length > 0" class="relative">
-          <!-- Navigation Buttons -->
-          <button
-            (click)="previousClassrooms()"
-            [disabled]="!canGoPrevious() || isTransitioning"
-            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Phòng trước"
-            type="button"
-          >
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </button>
-          
-          <button
-            (click)="nextClassrooms()"
-            [disabled]="!canGoNext() || isTransitioning"
-            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Phòng tiếp theo"
-            type="button"
-          >
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </button>
-
-          <!-- Carousel Container -->
-          <div class="overflow-hidden px-12">
-            <div 
-              #carouselContainer
-              class="flex gap-6"
-              [ngClass]="{
-                'transition-transform duration-500 ease-in-out': !resetInProgress
-              }"
-              [style.transform]="getTransformStyle()"
-            >
-              <div
-                *ngFor="let classroom of displayedClassrooms; let i = index"
-                class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 w-[280px] flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105"
-              >
-                <img
-                  [src]="classroom?.imageUrl || 'assets/images/no-image.png'"
-                  [alt]="classroom?.classroomName || 'Phòng học'"
-                  class="h-48 w-full object-cover rounded mb-4"
-                />
-                <h3 class="text-lg font-semibold text-gray-800 text-center px-2">
-                  {{ classroom?.classroomName }}
-                </h3>
-                <p *ngIf="classroom?.description" class="text-sm text-gray-600 text-center mt-2 px-2 line-clamp-2">
-                  {{ classroom.description }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Infinite Carousel Component -->
+        <app-infinite-carousel
+          *ngIf="!loadingClassrooms && !classroomError && carouselItems.length > 0"
+          [items]="carouselItems"
+          [cardWidth]="280"
+          [cardGap]="24"
+          [visibleCards]="4"
+          [showNavigation]="true">
+        </app-infinite-carousel>
 
         <!-- Empty State -->
-        <div *ngIf="!loadingClassrooms && !classroomError && classrooms.length === 0" class="text-center py-8">
+        <div *ngIf="!loadingClassrooms && !classroomError && carouselItems.length === 0" class="text-center py-8">
           <p class="text-gray-600">Chưa có phòng học nào được hiển thị.</p>
         </div>
       </div>
