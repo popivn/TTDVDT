@@ -10,6 +10,7 @@
     
     # Copy chỉ những file cần thiết cho .NET build
     COPY Controllers/ ./Controllers/
+    COPY Commands/ ./Commands/
     COPY Data/ ./Data/
     COPY DTOs/ ./DTOs/
     COPY Models/ ./Models/
