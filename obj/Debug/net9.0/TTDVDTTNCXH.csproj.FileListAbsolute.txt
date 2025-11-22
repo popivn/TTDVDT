@@ -128,11 +128,11 @@ C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\tsconfig.spec.json
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\TTDVDTTNCXH.sourcelink.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\dist\TTDVDTTNCXHClient\prerendered-routes.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\TTDVDTTNCXH.staticwebassets.runtime.json
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\gpqja5y3o9-u60hh9b3ou.gz
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\p68q44pfu7-vagikyz9qx.gz
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\rjguv5lbbx-1dks0wz7uz.gz
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xug5pupcsj-tvy3j3n584.gz
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\proxy.conf.json
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-hqwhdweeh3.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\ib1n0392gt-e2ybxvh483.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\h10g5rq8h9-apwwi51469.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\gpqja5y3o9-35sb4x79ds.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-89gzkzv36h.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\lenll7zxmw-c8yhtzp3m6.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\0p3k618yqk-1fex5gird1.gz

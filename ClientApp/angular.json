@@ -55,6 +55,13 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": [
+              "adapted-entirely-pangolin.ngrok-free.app",
+              ".ngrok-free.app",
+              ".ngrok.io"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "TTDVDTTNCXHClient:build:production"

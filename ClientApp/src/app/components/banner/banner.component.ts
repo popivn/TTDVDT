@@ -96,10 +96,10 @@ export class BannerComponent implements OnInit, OnDestroy {
   }
 
   onExploreCourses() {
-    // Navigate to courses page or scroll to courses section
-    const coursesSection = document.getElementById('courses');
-    if (coursesSection) {
-      coursesSection.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to the pending class list section
+    const pendingClassListSection = document.getElementById('pending-class-list');
+    if (pendingClassListSection) {
+      pendingClassListSection.scrollIntoView({ behavior: 'smooth' });
     }
   }
 }

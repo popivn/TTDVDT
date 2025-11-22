@@ -15,19 +15,21 @@
 
   <!-- Content -->
   <div class="container mx-auto max-w-6xl relative z-20">
-    <div class="flex flex-col lg:flex-row items-center gap-8">
+    <div class="flex flex-col md:flex-row items-center gap-8">
       <!-- Text Content -->
-      <div class="flex-1 text-center lg:text-left text-white">
-        <h2 class="text-4xl lg:text-5xl font-bold mb-4">
-          Nâng cao kỹ năng - Vững bước tương lai
+      <div class="flex-1 text-center md:text-left text-white">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 uppercase">
+          <span class="block sm:hidden">VỮNG BƯỚC TƯƠNG LAI</span>
+          <span class="hidden sm:inline">NÂNG CAO KỸ NĂNG - VỮNG BƯỚC TƯƠNG LAI</span>
         </h2>
-        <p class="text-lg lg:text-xl mb-8 text-green-50">
-          Khám phá các khóa học chất lượng cao được thiết kế cho sự thành công của bạn.
+        <p class="text-base sm:text-lg md:text-xl mb-8 text-green-50 uppercase">
+          <span class="block sm:hidden">KHÓA HỌC CHẤT LƯỢNG CAO.</span>
+          <span class="hidden sm:inline">KHÁM PHÁ CÁC KHÓA HỌC CHẤT LƯỢNG CAO ĐƯỢC THIẾT KẾ CHO SỰ THÀNH CÔNG CỦA BẠN.</span>
         </p>
         <button 
           (click)="onExploreCourses()"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-lg">
-          Khám phá các khóa học
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors shadow-lg uppercase text-sm sm:text-base">
+          KHÁM PHÁ CÁC KHÓA HỌC
         </button>
       </div>
     </div>
