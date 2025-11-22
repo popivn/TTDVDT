@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingService } from '../../services/setting.service';
+import { processImagePath } from '../../utils/image.utils';
 
 @Component({
   selector: 'app-banner',
@@ -29,12 +30,13 @@ export class BannerComponent implements OnInit, OnDestroy {
     }
   }
 
+  
   private loadLogo() {
     const settings = this.settingService.getSettingsCache();
     if (settings) {
       const logoPath = settings['logo'];
       if (logoPath) {
-        this.logo = this.processImagePath(logoPath);
+        this.logo = processImagePath(logoPath) || '';
       }
     }
   }
@@ -50,38 +52,21 @@ export class BannerComponent implements OnInit, OnDestroy {
       const images: string[] = [];
       
       if (hr1) {
-        images.push(this.processImagePath(hr1));
+        const processedPath = processImagePath(hr1);
+        if (processedPath) {
+          images.push(processedPath);
+        }
       }
       
       if (hr2) {
-        images.push(this.processImagePath(hr2));
+        const processedPath = processImagePath(hr2);
+        if (processedPath) {
+          images.push(processedPath);
+        }
       }
       
       this.slideImages = images;
     }
-  }
-
-  private processImagePath(path: string): string {
-    if (!path) return '';
-    
-    // Replace backslashes with forward slashes
-    let processedPath = path.replace(/\\/g, '/');
-    
-    // Remove ClientApp/public prefix if present (handle both forward and backward slashes)
-    processedPath = processedPath.replace(/^ClientApp\/public\//i, '');
-    processedPath = processedPath.replace(/^ClientApp\\public\\/i, '');
-    
-    // If it starts with assets, make it relative to root
-    if (processedPath.startsWith('assets/')) {
-      processedPath = '/' + processedPath;
-    } else if (processedPath.startsWith('/assets/')) {
-      // Already has leading slash
-    } else if (!processedPath.startsWith('/')) {
-      // Add leading slash for absolute path from root
-      processedPath = '/' + processedPath;
-    }
-    
-    return processedPath;
   }
 
   private startAutoSlide() {

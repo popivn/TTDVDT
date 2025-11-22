@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselItem } from './carousel-item.interface';
 
@@ -9,7 +9,7 @@ import { CarouselItem } from './carousel-item.interface';
   templateUrl: './infinite-carousel.component.html',
   styleUrl: './infinite-carousel.component.css'
 })
-export class InfiniteCarouselComponent implements OnInit {
+export class InfiniteCarouselComponent implements OnInit, OnDestroy {
   @Input() items: CarouselItem[] = [];
   @Input() cardWidth: number = 280;
   @Input() cardGap: number = 24;
@@ -20,6 +20,8 @@ export class InfiniteCarouselComponent implements OnInit {
   translateX: number = 0;
   isTransitioning: boolean = false;
   resetInProgress: boolean = false;
+
+  private autoNextIntervalId: any;
 
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLElement>;
 
@@ -32,12 +34,32 @@ export class InfiniteCarouselComponent implements OnInit {
     if (this.items && this.items.length > 0) {
       this.initializeCarousel();
     }
+    this.setupAutoNext();
   }
 
   ngOnChanges() {
     if (this.items && this.items.length > 0 && !this.displayedItems.length) {
       this.initializeCarousel();
     }
+  }
+
+  ngOnDestroy() {
+    if (this.autoNextIntervalId) {
+      clearInterval(this.autoNextIntervalId);
+    }
+  }
+
+  private setupAutoNext() {
+    if (this.autoNextIntervalId) {
+      clearInterval(this.autoNextIntervalId);
+    }
+    // Chạy nextItems mỗi 3s
+    this.autoNextIntervalId = setInterval(() => {
+      // Không tự next nếu đang chuyển động hoặc khi không có đủ items
+      if (!this.isTransitioning && !this.resetInProgress && this.items.length > 0) {
+        this.nextItems(true);
+      }
+    }, 3000);
   }
 
   private updateVisibleCards() {
@@ -74,7 +96,10 @@ export class InfiniteCarouselComponent implements OnInit {
     }, 500);
   }
 
-  nextItems() {
+  /**
+   * @param isAuto nếu là true thì là chạy tự động, false là người dùng bấm
+   */
+  nextItems(isAuto: boolean = false) {
     if (this.items.length === 0 || this.isTransitioning || this.resetInProgress) return;
     
     this.isTransitioning = true;

@@ -12,6 +12,8 @@ import { ClassroomService, Classroom } from '../../services/classroom.service';
 import { processImagePath } from '../../utils/image.utils';
 import { InfiniteCarouselComponent } from '../infinite-carousel/infinite-carousel.component';
 import { CarouselItem } from '../infinite-carousel/carousel-item.interface';
+import { CollapseComponent } from '../collapse/collapse.component';
+import { CollapseItem } from '../collapse/collapse-item.interface';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +24,8 @@ import { CarouselItem } from '../infinite-carousel/carousel-item.interface';
     ServiceCardComponent,
     CourseCardComponent,
     NewsCardComponent,
-    InfiniteCarouselComponent // Thêm component mới
+    InfiniteCarouselComponent, // Thêm component mới
+    CollapseComponent // Thêm component mới
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -130,6 +133,7 @@ export class HomeComponent implements OnInit {
         if (response.success && response.classrooms) {
           // Chuyển đổi classrooms thành CarouselItem
           this.carouselItems = response.classrooms.map(classroom => ({
+            id: classroom.id, 
             imageUrl: processImagePath(classroom.imageUrl || '') || 'assets/images/no-image.png',
             name: classroom.classroomName,
             description: classroom.description
@@ -190,6 +194,19 @@ export class HomeComponent implements OnInit {
     {
       date: '05/10/2023',
       title: 'Thông báo tuyển sinh các lớp Tin học văn phòng MOS'
+    }
+  ];
+
+  collapseItems: CollapseItem[] = [
+    {
+      id: 1,
+      name: 'Item 1',
+      imageUrl: 'assets/images/item1.jpg'
+    },
+    {
+      id: 2,
+      name: 'Item 2',
+      imageUrl: 'assets/images/item2.jpg'
     }
   ];
 }

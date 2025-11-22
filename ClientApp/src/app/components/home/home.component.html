@@ -1,81 +1,40 @@
-<div>
-    <app-banner></app-banner>
+<div class="relative">
+  <app-banner></app-banner>
 
-    <!-- Service Cards Section -->
-    <section class="py-12 px-4 bg-gray-50">
-      <div class="container mx-auto max-w-6xl">
-        <!-- Loading State -->
-        <div *ngIf="loadingClassrooms" class="text-center py-8">
-          <p class="text-gray-600">Đang tải phòng học...</p>
-        </div>
+  <!-- Infinite Carousel: Đè lên banner -->
+  <div class="absolute top-[380px] left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
+    <app-infinite-carousel
+      *ngIf="!loadingClassrooms && !classroomError && carouselItems.length > 0"
+      [items]="carouselItems"
+      [cardWidth]="280"
+      [cardGap]="24"
+      [visibleCards]="4"
+      [showNavigation]="true">
+    </app-infinite-carousel>
+  </div>
 
-        <!-- Error State -->
-        <div *ngIf="classroomError && !loadingClassrooms" class="text-center py-8">
-          <p class="text-red-600">{{ classroomError }}</p>
-        </div>
-
-        <!-- Infinite Carousel Component -->
-        <app-infinite-carousel
-          *ngIf="!loadingClassrooms && !classroomError && carouselItems.length > 0"
-          [items]="carouselItems"
-          [cardWidth]="280"
-          [cardGap]="24"
-          [visibleCards]="4"
-          [showNavigation]="true">
-        </app-infinite-carousel>
-
-        <!-- Empty State -->
-        <div *ngIf="!loadingClassrooms && !classroomError && carouselItems.length === 0" class="text-center py-8">
-          <p class="text-gray-600">Chưa có phòng học nào được hiển thị.</p>
-        </div>
+  <!-- Service Cards Section -->
+  <section class="py-12 px-4 bg-gray-50">
+    <div class="container mx-auto max-w-6xl">
+      <!-- Loading State -->
+      <div *ngIf="loadingClassrooms" class="text-center py-8">
+        <p class="text-gray-600">Đang tải phòng học...</p>
       </div>
-    </section>
 
-    <!-- Featured Faculties Section -->
-    <section id="faculties" class="py-12 px-4">
-      <div class="container mx-auto max-w-6xl">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Các Khoa Nổi Bật</h2>
-        
-        <!-- Loading State -->
-        <div *ngIf="loading" class="text-center py-8">
-          <p class="text-gray-600">Đang tải dữ liệu...</p>
-        </div>
-        
-        <!-- Error State -->
-        <div *ngIf="error && !loading" class="text-center py-8">
-          <p class="text-red-600">{{ error }}</p>
-        </div>
-        
-        <!-- Faculties Grid - 3 columns per row -->
-        <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <app-course-card
-            *ngFor="let faculty of faculties"
-            [title]="faculty.facultyName"
-            [description]="faculty.description || ''"
-            [imageUrl]="faculty.imageUrl"
-            [imageAlt]="faculty.facultyName">
-          </app-course-card>
-        </div>
-        
-        <!-- Empty State -->
-        <div *ngIf="!loading && !error && faculties.length === 0" class="text-center py-8">
-          <p class="text-gray-600">Chưa có khoa nào được hiển thị.</p>
-        </div>
+      <!-- Error State -->
+      <div *ngIf="classroomError && !loadingClassrooms" class="text-center py-8">
+        <p class="text-red-600">{{ classroomError }}</p>
       </div>
-    </section>
 
-    <!-- News & Events Section -->
-    <section class="py-12 px-4 bg-gray-50">
-      <div class="container mx-auto max-w-6xl">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Tin Tức & Sự Kiện</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <app-news-card
-            *ngFor="let item of news"
-            [date]="item.date"
-            [title]="item.title">
-          </app-news-card>
-        </div>
+      <!-- Empty State -->
+      <div *ngIf="!loadingClassrooms && !classroomError && carouselItems.length === 0" class="text-center py-8">
+        <p class="text-gray-600">Chưa có phòng học nào được hiển thị.</p>
       </div>
-    </section>
+    </div>
+  </section>
+  <!-- Collapse Component Example -->
+   <div class="mt-[160px]">
+     <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">DANH SÁCH CÁC LỚP HỌC CHỜ KHAI GIẢNG</h1>
+     <app-collapse [items]="carouselItems"></app-collapse>
+   </div>
 </div>
-

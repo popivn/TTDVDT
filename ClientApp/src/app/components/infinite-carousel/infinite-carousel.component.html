@@ -1,4 +1,4 @@
-<div class="relative" *ngIf="items.length > 0">
+<div class="relative container mx-auto" *ngIf="items.length > 0">
   <!-- Navigation Buttons -->
   <button
     *ngIf="showNavigation"
@@ -26,8 +26,8 @@
     </svg>
   </button>
 
-  <!-- Carousel Container -->
-  <div class="overflow-hidden px-12">
+  <!-- Carousel Container - bo góc cho khung chứa các item -->
+  <div class="overflow-hidden px-12 rounded-2xl  shadow-md">
     <div 
       #carouselContainer
       class="flex gap-6"
@@ -56,6 +56,3 @@
     </div>
   </div>
 </div>
-
-
-
