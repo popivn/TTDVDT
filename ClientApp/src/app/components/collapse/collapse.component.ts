@@ -40,4 +40,27 @@ export class CollapseComponent implements OnInit {
   isExpanded(itemId: number | string): boolean {
     return this.expandedItems.has(itemId);
   }
+
+  // Thêm method để expand item theo name hoặc id từ bên ngoài
+  expandItemByName(name: string) {
+    const item = this.items.find(i => i.name === name);
+    
+    if (item) {
+      // Nếu chưa mở thì mở nó
+      if (!this.expandedItems.has(item.id)) {
+        this.expandedItems.add(item.id);
+      }
+    }
+  }
+
+  expandItemById(id: number | string) {
+    const item = this.items.find(i => i.id === id);
+    
+    if (item) {
+      // Nếu chưa mở thì mở nó
+      if (!this.expandedItems.has(item.id)) {
+        this.expandedItems.add(item.id);
+      }
+    }
+  }
 }

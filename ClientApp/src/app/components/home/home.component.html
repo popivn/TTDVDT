@@ -9,7 +9,8 @@
       [cardWidth]="280"
       [cardGap]="24"
       [visibleCards]="4"
-      [showNavigation]="true">
+      [showNavigation]="true"
+      (itemClick)="onCarouselItemClick($event)">
     </app-infinite-carousel>
   </div>
 
@@ -35,6 +36,6 @@
   <!-- Collapse Component Example -->
    <div id="pending-class-list" class="mt-[160px]">
      <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">DANH SÁCH CÁC LỚP HỌC CHỜ KHAI GIẢNG</h1>
-     <app-collapse [items]="carouselItems"></app-collapse>
+     <app-collapse #collapseComponent [items]="carouselItems"></app-collapse>
    </div>
 </div>

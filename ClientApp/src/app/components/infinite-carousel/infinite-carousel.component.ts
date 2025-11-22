@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselItem } from './carousel-item.interface';
 
@@ -15,6 +15,9 @@ export class InfiniteCarouselComponent implements OnInit, AfterViewInit, OnDestr
   @Input() cardGap: number = 24;
   @Input() visibleCards: number = 4;
   @Input() showNavigation: boolean = true;
+
+  // Thêm Output event để emit khi item được click
+  @Output() itemClick = new EventEmitter<CarouselItem>();
 
   displayedItems: CarouselItem[] = [];
   isTransitioning: boolean = false;
@@ -288,5 +291,12 @@ export class InfiniteCarouselComponent implements OnInit, AfterViewInit, OnDestr
 
   canGoNext(): boolean {
     return this.items.length > 0;
+  }
+
+  // Method xử lý click vào item
+  onItemClick(item: CarouselItem) {
+    if (item) {
+      this.itemClick.emit(item);
+    }
   }
 }

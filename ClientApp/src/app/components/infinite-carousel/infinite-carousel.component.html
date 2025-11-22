@@ -39,8 +39,9 @@
     >
       <div
         *ngFor="let item of displayedItems; let i = index"
-        class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105"
+        class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer"
         [style.width.px]="effectiveCardWidth"
+        (click)="onItemClick(item)"
       >
         <img
           [src]="item?.imageUrl || 'assets/images/no-image.png'"

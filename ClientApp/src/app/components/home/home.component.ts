@@ -171,42 +171,38 @@ export class HomeComponent implements OnInit {
     return this.classrooms.length > 0;
   }
 
-  services = [
-    {
-      title: 'Đăng ký tư vấn',
-      icon: 'headset'
-    },
-    {
-      title: 'Câu hỏi thường gặp',
-      icon: 'question'
-    }
-  ];
+  // Thêm ViewChild để tham chiếu đến collapse component
+  @ViewChild(CollapseComponent) collapseComponent!: CollapseComponent;
+  
+  // Hoặc có thể dùng ElementRef để scroll đến section
+  @ViewChild('collapseSection', { static: false }) collapseSection!: ElementRef;
 
-  news = [
-    {
-      date: '15/10/2023',
-      title: 'Hội thảo Kỹ năng Giao tiếp Hiệu quả trong Môi trường...'
-    },
-    {
-      date: '12/10/2023',
-      title: 'Khai giảng khóa Luyện thi TOEIC cấp tốc tháng 11'
-    },
-    {
-      date: '05/10/2023',
-      title: 'Thông báo tuyển sinh các lớp Tin học văn phòng MOS'
+  // Method xử lý khi item trong carousel được click
+  onCarouselItemClick(item: any) {
+    if (item && this.collapseComponent) {
+      // Expand item trong collapse theo name
+      this.collapseComponent.expandItemByName(item.name);
+      
+      // Scroll đến section collapse
+      this.scrollToCollapseSection();
     }
-  ];
+  }
 
-  collapseItems: CollapseItem[] = [
-    {
-      id: 1,
-      name: 'Item 1',
-      imageUrl: 'assets/images/item1.jpg'
-    },
-    {
-      id: 2,
-      name: 'Item 2',
-      imageUrl: 'assets/images/item2.jpg'
+  // Method scroll đến section collapse
+  scrollToCollapseSection() {
+    const section = document.getElementById('pending-class-list');
+    if (section) {
+      section.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+      
+      // Hoặc có thể scroll với offset để không bị che bởi header/fixed elements
+      setTimeout(() => {
+        const yOffset = -80; // Offset để không bị che
+        const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 100);
     }
-  ];
+  }
 }
