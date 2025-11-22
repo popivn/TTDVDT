@@ -1,4 +1,4 @@
-<div class="relative container mx-auto" *ngIf="items.length > 0">
+<div class="relative container mx-auto px-2 sm:px-4 max-w-6xl md:max-w-7xl lg:max-w-full xl:max-w-none w-full" *ngIf="items.length > 0">
   <!-- Navigation Buttons -->
   <button
     *ngIf="showNavigation"
@@ -26,20 +26,21 @@
     </svg>
   </button>
 
-  <!-- Carousel Container - bo góc cho khung chứa các item -->
-  <div class="overflow-hidden px-12 rounded-2xl  shadow-md">
+  <!-- Scroll Container - Thêm max-width và width cố định -->
+  <div 
+    #scrollContainer
+    class="overflow-x-auto px-12 rounded-2xl shadow-md scrollbar-hide"
+    style="scroll-behavior: smooth; overflow-y: hidden; width: 100%; max-width: 100vw;"
+  >
     <div 
-      #carouselContainer
+      #carouselContent
       class="flex gap-6"
-      [ngClass]="{
-        'transition-transform duration-500 ease-in-out': !resetInProgress
-      }"
-      [style.transform]="getTransformStyle()"
+      style="flex-wrap: nowrap; width: max-content; min-width: 100%;"
     >
       <div
         *ngFor="let item of displayedItems; let i = index"
         class="bg-white rounded-lg shadow-md flex flex-col items-center py-6 px-4 flex-shrink-0 transition-all duration-300 hover:shadow-xl hover:scale-105"
-        [style.width.px]="cardWidth"
+        [style.width.px]="effectiveCardWidth"
       >
         <img
           [src]="item?.imageUrl || 'assets/images/no-image.png'"

@@ -2,7 +2,7 @@
   <app-banner></app-banner>
 
   <!-- Infinite Carousel: Đè lên banner -->
-  <div class="absolute top-[380px] left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
+  <div class="absolute top-[380px] left-1/2 -translate-x-1/2 z-10 flex justify-center w-full overflow-x-auto scrollbar-hide">
     <app-infinite-carousel
       *ngIf="!loadingClassrooms && !classroomError && carouselItems.length > 0"
       [items]="carouselItems"
