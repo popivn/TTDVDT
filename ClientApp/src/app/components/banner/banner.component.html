@@ -1,4 +1,4 @@
-<section class="relative py-16 px-4 overflow-hidden min-h-[500px]">
+<section class="relative py-16 px-4 overflow-hidden min-h-[500px] mt-5">
   <!-- Background Slider -->
   <div class="absolute inset-0 top-0 left-0 w-full h-full">
     <div 
@@ -26,11 +26,20 @@
           <span class="block sm:hidden">KHÓA HỌC CHẤT LƯỢNG CAO.</span>
           <span class="hidden sm:inline">KHÁM PHÁ CÁC KHÓA HỌC CHẤT LƯỢNG CAO ĐƯỢC THIẾT KẾ CHO SỰ THÀNH CÔNG CỦA BẠN.</span>
         </p>
-        <button 
-          (click)="onExploreCourses()"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors shadow-lg uppercase text-sm sm:text-base">
-          KHÁM PHÁ CÁC KHÓA HỌC
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-4 justify-center sm:justify-start">
+          <button 
+            (click)="onExploreCourses()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors shadow-lg uppercase text-sm sm:text-base">
+            <span class="block sm:hidden">Khám Phá</span>
+            <span class="hidden sm:inline">KHÁM PHÁ CÁC KHÓA HỌC</span>
+          </button>
+          <button 
+            (click)="onOpenRegisterForm()"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors shadow-lg uppercase text-sm sm:text-base">
+            <span class="block sm:hidden">Đăng kí</span>
+            <span class="hidden sm:inline">ĐĂNG KÍ KHÓA HỌC</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

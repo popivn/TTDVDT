@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, output, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingService } from '../../services/setting.service';
@@ -12,6 +12,7 @@ import { processImagePath } from '../../utils/image.utils';
   styleUrl: './banner.component.css'
 })
 export class BannerComponent implements OnInit, OnDestroy {
+  @Output() openRegisterForm = new EventEmitter<void>();
   private settingService = inject(SettingService);
   logo: string = '';
   slideImages: string[] = [];
@@ -101,6 +102,9 @@ export class BannerComponent implements OnInit, OnDestroy {
     if (pendingClassListSection) {
       pendingClassListSection.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+  onOpenRegisterForm(){
+    this.openRegisterForm.emit();
   }
 }
 
