@@ -1,0 +1,56 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[40%]">
+          Khóa học
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[20%]">
+          Học phí
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[20%]">
+          Thời gian học
+        </th>
+        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-[20%]">
+          Đăng ký
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <!-- Nếu có dữ liệu -->
+      <tr *ngFor="let item of data" class="hover:bg-gray-50 transition-colors">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm font-medium text-gray-900">
+            {{ item.courseName }}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">
+            {{ formatTuition(item.tuition) }}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">
+            {{ item.studyTime }}
+          </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-right">
+          <button
+            (click)="onRegisterClick(item)"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            Đăng ký
+          </button>
+        </td>
+      </tr>
+
+      <!-- Nếu không có dữ liệu -->
+      <tr *ngIf="!data || data.length === 0">
+        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+          Chưa có dữ liệu
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

@@ -1,22 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { CollapseItem } from './collapse-item.interface';
+import { CourseTableComponent } from '../course-table/course-table.component';
+import { CourseTableItem } from '../course-table/course-table-item.interface';
+import { CourseTableMobileComponent } from '../course-table-mobile/course-table-mobile.component';
 
 @Component({
   selector: 'app-collapse',
   standalone: true,
   imports: [
     CommonModule,
-    FaIconComponent
+    FaIconComponent,
+    CourseTableComponent,
+    CourseTableMobileComponent
   ],
   templateUrl: './collapse.component.html',
   styleUrl: './collapse.component.css'
 })
 export class CollapseComponent implements OnInit {
   @Input() items: CollapseItem[] = [];
-
+  windowWidth: number = window.innerWidth;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.windowWidth = window.innerWidth;
+  }
   // Icon cho chevron down
   faChevronDown = faChevronDown;
 
@@ -62,5 +71,12 @@ export class CollapseComponent implements OnInit {
         this.expandedItems.add(item.id);
       }
     }
+  }
+
+  // Lấy dữ liệu khóa học cho một item (có thể mở rộng sau)
+  getCourseDataForItem(itemId: number | string): CourseTableItem[] {
+    // TODO: Thay thế bằng logic lấy dữ liệu thực tế từ API hoặc service
+    // Hiện tại trả về mảng rỗng để hiển thị "Chưa có dữ liệu"
+    return [];
   }
 }

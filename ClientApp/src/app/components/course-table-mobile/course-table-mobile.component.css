@@ -1,0 +1,33 @@
+/* Additional custom styles for mobile course table */
+.course-table-mobile {
+  width: 100%;
+}
+
+.course-card {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-state {
+  background-color: #f9fafb;
+  border-radius: 12px;
+  border: 1px dashed #d1d5db;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .course-table-mobile {
+    display: none; /* Ẩn trên desktop, chỉ hiển thị trên mobile */
+  }
+}
+
