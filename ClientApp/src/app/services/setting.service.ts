@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 
 export interface SettingItem {
   key: string;
@@ -22,15 +23,48 @@ export class SettingService {
   private apiUrl = 'api/setting';
   private settingsCache: { [key: string]: string } | null = null;
 
+  // Lấy tất cả settings, dùng cache nếu có
   getAllSettings(): Observable<SettingResponse> {
-    return this.http.get<SettingResponse>(this.apiUrl);
+    if (this.settingsCache) {
+      return of({
+        success: true,
+        message: 'Loaded from cache',
+        settings: this.settingsCache
+      });
+    }
+    return this.http.get<SettingResponse>(this.apiUrl).pipe(
+      tap(res => {
+        if (res && res.success && res.settings) {
+          this.settingsCache = res.settings;
+        }
+      })
+    );
   }
 
+  // Lấy setting theo key, dùng cache nếu có
   getSettingByKey(key: string): Observable<SettingResponse> {
-    return this.http.get<SettingResponse>(`${this.apiUrl}/${key}`);
+    if (this.settingsCache && this.settingsCache[key] !== undefined) {
+      return of({
+        success: true,
+        message: 'Loaded from cache',
+        setting: { key, value: this.settingsCache[key] }
+      });
+    }
+    return this.http.get<SettingResponse>(`${this.apiUrl}/${key}`).pipe(
+      tap(res => {
+        if (
+          res && res.success && res.setting
+        ) {
+          if (!this.settingsCache) {
+            this.settingsCache = {};
+          }
+          this.settingsCache[res.setting.key] = res.setting.value;
+        }
+      })
+    );
   }
 
-  // Cache settings in memory
+  // Lưu cache settings trong bộ nhớ
   setSettingsCache(settings: { [key: string]: string }): void {
     this.settingsCache = settings;
   }
@@ -43,4 +77,3 @@ export class SettingService {
     return this.settingsCache?.[key];
   }
 }
-

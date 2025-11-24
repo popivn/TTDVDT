@@ -80,15 +80,10 @@ export class HomeComponent implements OnInit {
 
   private logSettings() {
     const settings = this.settingService.getSettingsCache();
-    console.log('Settings data in HomeComponent:', settings);
     
     if (settings) {
-      console.log('All settings keys:', Object.keys(settings));
-      console.log('All settings values:', Object.values(settings));
       
-      // Log từng setting
       Object.entries(settings).forEach(([key, value]) => {
-        console.log(`Setting [${key}]:`, value);
       });
     } else {
       console.warn('Settings cache is empty. Settings may not have been loaded yet.');
