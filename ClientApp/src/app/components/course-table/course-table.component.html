@@ -21,17 +21,17 @@
       <tr *ngFor="let item of data" class="hover:bg-gray-50 transition-colors">
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="text-sm font-medium text-gray-900">
-            {{ item.courseName }}
+            {{ item.Name }}
           </div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="text-sm text-gray-900">
-            {{ formatTuition(item.tuition) }}
+            {{ formatTuition(item.Tuition) }}
           </div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="text-sm text-gray-900">
-            {{ item.studyTime }}
+            {{ item.Duration }} tiết
           </div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-right">

@@ -1,8 +1,10 @@
 export interface CourseTableItem {
-  id?: number | string;
-  courseName: string;
-  tuition: string | number;
-  studyTime: string;
-  registrationLink?: string;
+  Id: number;
+  Name: string;
+  Duration: number; // Số tiết
+  Tuition: number;
+  ClassId: number;
+  CreatedAt?: string;
+  UpdatedAt?: string;
 }
 

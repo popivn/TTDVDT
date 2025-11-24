@@ -20,6 +20,13 @@ namespace TTDVDTTNCXH.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // Cấu hình relationship giữa Course và Classroom
+            modelBuilder.Entity<Course>()
+                .HasOne(c => c.Classroom)
+                .WithMany()
+                .HasForeignKey(c => c.ClassId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

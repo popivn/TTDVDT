@@ -133,6 +133,6 @@ C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\rjguv5lbbx-1dks0wz7uz.
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xug5pupcsj-tvy3j3n584.gz
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\proxy.conf.json
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\gpqja5y3o9-73od3kg5df.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-3mjkj7h7is.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xfxia9xl1v-hdmhso2lf2.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\grd98tkzym-tiyvs1mncz.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-hd7t4bdctj.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\48n60fwro7-tjifhvqgfs.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\669oypbpco-pa2pbxxqol.gz

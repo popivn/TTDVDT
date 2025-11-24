@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,8 @@ import { CollapseItem } from './collapse-item.interface';
 import { CourseTableComponent } from '../course-table/course-table.component';
 import { CourseTableItem } from '../course-table/course-table-item.interface';
 import { CourseTableMobileComponent } from '../course-table-mobile/course-table-mobile.component';
+import { CourseService } from '../../services/course.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-collapse',
@@ -22,6 +24,9 @@ import { CourseTableMobileComponent } from '../course-table-mobile/course-table-
 export class CollapseComponent implements OnInit {
   @Input() items: CollapseItem[] = [];
   windowWidth: number = window.innerWidth;
+  
+  private courseService = inject(CourseService);
+  
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.windowWidth = window.innerWidth;
@@ -73,10 +78,23 @@ export class CollapseComponent implements OnInit {
     }
   }
 
-  // Lấy dữ liệu khóa học cho một item (có thể mở rộng sau)
-  getCourseDataForItem(itemId: number | string): CourseTableItem[] {
-    // TODO: Thay thế bằng logic lấy dữ liệu thực tế từ API hoặc service
-    // Hiện tại trả về mảng rỗng để hiển thị "Chưa có dữ liệu"
-    return [];
+  // Lấy dữ liệu khóa học cho một item
+  getCourseDataForItem(itemId: number | string): Observable<CourseTableItem[]> {
+    // Convert itemId sang number (classId)
+    const classId = typeof itemId === 'string' ? parseInt(itemId, 10) : itemId;
+    
+    return this.courseService.getCoursesByClassIdCached(classId).pipe(
+      map(courses => 
+        (courses ?? []).map(course => ({
+          Id: course.id,
+          Name: course.name,
+          Duration: course.duration,
+          Tuition: course.tuition,
+          ClassId: course.classId,
+          CreatedAt: course.createdAt,
+          UpdatedAt: course.updatedAt
+        }))
+      )
+    );
   }
 }

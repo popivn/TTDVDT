@@ -11,7 +11,6 @@ import { CourseTableItem } from './course-table-item.interface';
 })
 export class CourseTableComponent implements OnInit {
   @Input() data: CourseTableItem[] = [];
-
   ngOnInit() {
     if (this.data && this.data.length > 0) {
       console.log('Course Table Data:', this.data);
