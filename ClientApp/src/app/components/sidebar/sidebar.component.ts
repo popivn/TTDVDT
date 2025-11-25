@@ -1,19 +1,45 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { 
+  faChartLine, 
+  faBook, 
+  faBuilding, 
+  faGear, 
+  faHome,
+  faBars,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons';
+
+interface MenuItem {
+  label: string;
+  route: string;
+  icon: any;
+}
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FaIconComponent
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
   isOpen = false;
+
+  // Icons
+  faBars = faBars;
+  faXmark = faXmark;
+  faChartLine = faChartLine;
+  faBook = faBook;
+  faBuilding = faBuilding;
+  faGear = faGear;
+  faHome = faHome;
 
   toggle() {
     this.isOpen = !this.isOpen;
@@ -23,15 +49,12 @@ export class SidebarComponent {
     this.isOpen = false;
   }
 
-  menuItems = [
-    { label: 'Dashboard', route: '/force-admin', icon: '📊' },
-    { label: 'Quản lý người dùng', route: '/force-admin/users', icon: '👥' },
-    { label: 'Quản lý khóa học', route: '/force-admin/courses', icon: '📚' },
-    { label: 'Quản lý tin tức', route: '/force-admin/news', icon: '📰' },
-    { label: 'Quản lý khoa', route: '/force-admin/faculties', icon: '🏫' },
-    { label: 'Quản lý phòng học', route: '/force-admin/classrooms', icon: '🏛️' },
-    { label: 'Cài đặt hệ thống', route: '/force-admin/settings', icon: '⚙️' },
-    { label: 'Về trang chủ', route: '/home', icon: '🏠' }
+  menuItems: MenuItem[] = [
+    { label: 'Dashboard', route: '/force-admin', icon: faChartLine },
+    { label: 'Quản lý khóa học', route: '/force-admin/courses', icon: faBook },
+    { label: 'Quản lý phòng học', route: '/force-admin/classrooms', icon: faBuilding },
+    { label: 'Cài đặt hệ thống', route: '/force-admin/settings', icon: faGear },
+    { label: 'Về trang chủ', route: '/home', icon: faHome }
   ];
 }
 

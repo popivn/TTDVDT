@@ -76,4 +76,46 @@ export class SettingService {
   getSettingValue(key: string): string | undefined {
     return this.settingsCache?.[key];
   }
+
+  // Tạo mới setting
+  createSetting(key: string, value: string): Observable<SettingResponse> {
+    return this.http.post<SettingResponse>(this.apiUrl, { key, value }).pipe(
+      tap(res => {
+        if (res && res.success) {
+          // Clear cache để reload
+          this.settingsCache = null;
+        }
+      })
+    );
+  }
+
+  // Cập nhật setting
+  updateSetting(key: string, value: string): Observable<SettingResponse> {
+    return this.http.put<SettingResponse>(`${this.apiUrl}/${key}`, { key, value }).pipe(
+      tap(res => {
+        if (res && res.success) {
+          // Update cache
+          if (this.settingsCache) {
+            this.settingsCache[key] = value;
+          } else {
+            this.settingsCache = { [key]: value };
+          }
+        }
+      })
+    );
+  }
+
+  // Xóa setting
+  deleteSetting(key: string): Observable<SettingResponse> {
+    return this.http.delete<SettingResponse>(`${this.apiUrl}/${key}`).pipe(
+      tap(res => {
+        if (res && res.success) {
+          // Remove from cache
+          if (this.settingsCache) {
+            delete this.settingsCache[key];
+          }
+        }
+      })
+    );
+  }
 }

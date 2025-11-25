@@ -82,4 +82,49 @@ export class ClassroomService {
   getClassroomsCache(): Classroom[] | null {
     return this.classroomsCache;
   }
+
+  // Tạo mới classroom
+  createClassroom(classroom: Partial<Classroom>): Observable<ClassroomResponse> {
+    return this.http.post<ClassroomResponse>(this.apiUrl, classroom).pipe(
+      tap(res => {
+        if (res && res.success) {
+          // Clear cache để reload
+          this.clearCache();
+        }
+      })
+    );
+  }
+
+  // Cập nhật classroom
+  updateClassroom(id: number, classroom: Partial<Classroom>): Observable<ClassroomResponse> {
+    return this.http.put<ClassroomResponse>(`${this.apiUrl}/${id}`, classroom).pipe(
+      tap(res => {
+        if (res && res.success && res.classroom) {
+          // Update cache
+          if (this.classroomsCache) {
+            const index = this.classroomsCache.findIndex(c => c.id === id);
+            if (index !== -1) {
+              this.classroomsCache[index] = res.classroom!;
+            }
+          }
+          this.classroomCache.set(id, res.classroom!);
+        }
+      })
+    );
+  }
+
+  // Xóa classroom
+  deleteClassroom(id: number): Observable<ClassroomResponse> {
+    return this.http.delete<ClassroomResponse>(`${this.apiUrl}/${id}`).pipe(
+      tap(res => {
+        if (res && res.success) {
+          // Remove from cache
+          if (this.classroomsCache) {
+            this.classroomsCache = this.classroomsCache.filter(c => c.id !== id);
+          }
+          this.classroomCache.delete(id);
+        }
+      })
+    );
+  }
 }

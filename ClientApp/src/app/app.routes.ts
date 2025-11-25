@@ -5,6 +5,9 @@ import { HomeComponent } from './components/home/home.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { AdminLayoutComponent } from './components/adminlayout/admin-layout.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { SettingsManagementComponent } from './components/admin/settings-management/settings-management.component';
+import { CoursesManagementComponent } from './components/admin/courses-management/courses-management.component';
+import { ClassroomsManagementComponent } from './components/admin/classrooms-management/classrooms-management.component';
 export const routes: Routes = [
   // Routes with layout (header + footer)
   {
@@ -33,6 +36,18 @@ export const routes: Routes = [
       {
         path: 'home',
         component: AdminComponent
+      },
+      {
+        path: 'settings',
+        component: SettingsManagementComponent
+      },
+      {
+        path: 'courses',
+        component: CoursesManagementComponent
+      },
+      {
+        path: 'classrooms',
+        component: ClassroomsManagementComponent
       }
     ]
   },

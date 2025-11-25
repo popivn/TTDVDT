@@ -7,20 +7,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total Users Card -->
-      <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-600 text-sm font-medium mb-1">Tổng người dùng</p>
-            <p class="text-3xl font-bold text-gray-800">{{ stats.totalUsers }}</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-            <span class="text-2xl">👥</span>
-          </div>
-        </div>
-      </div>
-
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Total Courses Card -->
       <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
         <div class="flex items-center justify-between">
@@ -29,20 +16,20 @@
             <p class="text-3xl font-bold text-gray-800">{{ stats.totalCourses }}</p>
           </div>
           <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <span class="text-2xl">📚</span>
+            <fa-icon [icon]="faBook" class="text-green-600 text-xl"></fa-icon>
           </div>
         </div>
       </div>
 
-      <!-- Total News Card -->
+      <!-- Total Classrooms Card -->
       <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-600 text-sm font-medium mb-1">Tổng tin tức</p>
-            <p class="text-3xl font-bold text-gray-800">{{ stats.totalNews }}</p>
+            <p class="text-gray-600 text-sm font-medium mb-1">Tổng phòng học</p>
+            <p class="text-3xl font-bold text-gray-800">{{ stats.totalClassrooms }}</p>
           </div>
-          <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-            <span class="text-2xl">📰</span>
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <fa-icon [icon]="faBuilding" class="text-blue-600 text-xl"></fa-icon>
           </div>
         </div>
       </div>
@@ -55,50 +42,24 @@
             <p class="text-3xl font-bold text-gray-800">{{ stats.totalSettings }}</p>
           </div>
           <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-            <span class="text-2xl">⚙️</span>
+            <fa-icon [icon]="faGear" class="text-purple-600 text-xl"></fa-icon>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Quick Actions -->
-      <div class="lg:col-span-1">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Thao tác nhanh</h2>
-          <div class="space-y-3">
-            <a
-              *ngFor="let action of quickActions"
-              [routerLink]="action.route"
-              class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-colors cursor-pointer"
-            >
-              <span class="text-2xl">{{ action.icon }}</span>
-              <span class="font-medium text-gray-700">{{ action.label }}</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Activities -->
-      <div class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Hoạt động gần đây</h2>
-          <div class="space-y-4">
-            <div
-              *ngFor="let activity of recentActivities"
-              class="flex items-start gap-4 p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <span class="text-xl">{{ getActivityIcon(activity.type) }}</span>
-              </div>
-              <div class="flex-1">
-                <p class="font-medium text-gray-800 mb-1">{{ activity.action }}</p>
-                <p class="text-sm text-gray-500">{{ activity.time }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Thao tác nhanh</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a
+          *ngFor="let action of quickActions"
+          [routerLink]="action.route"
+          class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-colors cursor-pointer"
+        >
+          <fa-icon [icon]="action.icon" class="text-2xl text-gray-600"></fa-icon>
+          <span class="font-medium text-gray-700">{{ action.label }}</span>
+        </a>
       </div>
     </div>
   </div>

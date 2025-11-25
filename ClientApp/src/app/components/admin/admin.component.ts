@@ -1,37 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faBook, faBuilding, faGear } from '@fortawesome/free-solid-svg-icons';
+import { CourseService } from '../../services/course.service';
+import { ClassroomService } from '../../services/classroom.service';
+import { SettingService } from '../../services/setting.service';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FaIconComponent
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit {
+  private courseService = inject(CourseService);
+  private classroomService = inject(ClassroomService);
+  private settingService = inject(SettingService);
+
+  // Icons
+  faBook = faBook;
+  faBuilding = faBuilding;
+  faGear = faGear;
+
   stats = {
-    totalUsers: 0,
     totalCourses: 0,
-    totalNews: 0,
+    totalClassrooms: 0,
     totalSettings: 0
   };
 
-  recentActivities = [
-    { id: 1, action: 'Người dùng mới đăng ký', time: '2 giờ trước', type: 'user' },
-    { id: 2, action: 'Khóa học mới được tạo', time: '5 giờ trước', type: 'course' },
-    { id: 3, action: 'Tin tức được cập nhật', time: '1 ngày trước', type: 'news' },
-    { id: 4, action: 'Cài đặt được thay đổi', time: '2 ngày trước', type: 'setting' }
-  ];
-
   quickActions = [
-    { label: 'Quản lý người dùng', route: '/admin/users', icon: '👥' },
-    { label: 'Quản lý khóa học', route: '/admin/courses', icon: '📚' },
-    { label: 'Quản lý tin tức', route: '/admin/news', icon: '📰' },
-    { label: 'Cài đặt hệ thống', route: '/admin/settings', icon: '⚙️' }
+    { label: 'Quản lý khóa học', route: '/force-admin/courses', icon: faBook },
+    { label: 'Quản lý phòng học', route: '/force-admin/classrooms', icon: faBuilding },
+    { label: 'Cài đặt hệ thống', route: '/force-admin/settings', icon: faGear }
   ];
 
   ngOnInit() {
@@ -39,24 +45,32 @@ export class AdminComponent implements OnInit {
   }
 
   loadStats() {
-    // TODO: Load actual stats from API
-    // For now, using mock data
-    this.stats = {
-      totalUsers: 150,
-      totalCourses: 45,
-      totalNews: 120,
-      totalSettings: 8
-    };
-  }
+    // Load courses count
+    this.courseService.getAllCourses().subscribe({
+      next: (response) => {
+        if (response.success && response.courses) {
+          this.stats.totalCourses = response.courses.length;
+        }
+      }
+    });
 
-  getActivityIcon(type: string): string {
-    const icons: { [key: string]: string } = {
-      'user': '👤',
-      'course': '📚',
-      'news': '📰',
-      'setting': '⚙️'
-    };
-    return icons[type] || '📋';
+    // Load classrooms count
+    this.classroomService.getAllClassrooms().subscribe({
+      next: (response) => {
+        if (response.success && response.classrooms) {
+          this.stats.totalClassrooms = response.classrooms.length;
+        }
+      }
+    });
+
+    // Load settings count
+    this.settingService.getAllSettings().subscribe({
+      next: (response) => {
+        if (response.success && response.settings) {
+          this.stats.totalSettings = Object.keys(response.settings).length;
+        }
+      }
+    });
   }
 }
 
