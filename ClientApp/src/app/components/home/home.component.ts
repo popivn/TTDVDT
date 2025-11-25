@@ -15,6 +15,11 @@ import { CarouselItem } from '../infinite-carousel/carousel-item.interface';
 import { CollapseComponent } from '../collapse/collapse.component';
 import { CollapseItem } from '../collapse/collapse-item.interface';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+import { EnrollmentFormComponent } from '../enrollment-form/enrollment-form.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+
+// Khai báo icon Close (brand) từ thư viện đã cài (ví dụ: FontAwesome)
+import { faXmark as faClose } from '@fortawesome/free-solid-svg-icons'; // hoặc từ brands nếu dùng brands
 
 @Component({
   selector: 'app-home',
@@ -27,7 +32,9 @@ import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive'
     NewsCardComponent,
     InfiniteCarouselComponent, // Thêm component mới
     CollapseComponent, // Thêm component mới
-    ScrollRevealDirective // Directive cho scroll reveal animation
+    ScrollRevealDirective, // Directive cho scroll reveal animation
+    EnrollmentFormComponent,
+    FaIconComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -36,7 +43,9 @@ export class HomeComponent implements OnInit {
   private settingService = inject(SettingService);
   private facultyService = inject(FacultyService);
   private classroomService = inject(ClassroomService);
-  
+
+  // Icon Close khai báo để dùng trong template
+  faClose = faClose;
   faculties: Faculty[] = [];
   classrooms: Classroom[] = [];
   displayedClassrooms: Classroom[] = [];
@@ -51,6 +60,7 @@ export class HomeComponent implements OnInit {
   loadingClassrooms = false;
   error: string | null = null;
   classroomError: string | null = null;
+  showRegisterForm: boolean = false; // dùng để hiển thị popup/form
 
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLElement>;
 
@@ -201,5 +211,13 @@ export class HomeComponent implements OnInit {
         window.scrollTo({ top: y, behavior: 'smooth' });
       }, 100);
     }
+  }
+
+  onOpenRegisterForm() {
+    this.showRegisterForm = true; // bật hiển thị popup/form
+  }
+
+  closeRegisterForm() {
+    this.showRegisterForm = false; // dùng để đóng form
   }
 }

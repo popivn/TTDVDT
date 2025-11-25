@@ -1,145 +1,143 @@
-<div class="enrollment-container">
-  <div class="enrollment-card">
-    <div class="form-header">
-      <h2>Form Đăng Ký</h2>
-      <p class="subtitle">Vui lòng điền đầy đủ thông tin để đăng ký</p>
+<div class="enrollment-container-horizontal rounded-2xl flex justify-center items-center min-h-[480px] bg-gradient-to-r from-blue-50 to-green-50 p-4">
+  <div class="enrollment-card-horizontal w-full max-w-4xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+    <div class="flex-1 p-6 md:p-10 bg-white">
+      <form [formGroup]="enrollmentForm" (ngSubmit)="onSubmit()" class="enrollment-form-horizontal space-y-4">
+        <div class="flex flex-col md:flex-row md:space-x-4">
+          <!-- Lớp học -->
+          <div class="form-group flex-1 mb-4 md:mb-0">
+            <label for="classroomId" class="block text-sm font-medium mb-1 text-gray-700">
+              Lớp Học <span class="required text-red-500">(*)</span>
+            </label>
+            <select
+              id="classroomId"
+              formControlName="classroomId"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=classroomId?.invalid && classroomId?.touched"
+            >
+              <option value="" disabled>Chọn</option>
+              <option *ngFor="let classroom of classrooms" [value]="classroom.id">
+                {{ classroom.classroomName }}
+              </option>
+            </select>
+            <div class="error-message text-xs text-red-600 mt-1" *ngIf="classroomId?.invalid && classroomId?.touched">
+              <span *ngIf="classroomId?.errors?.['required']">Vui lòng chọn lớp học</span>
+            </div>
+          </div>
+          <!-- Khóa học -->
+          <div class="form-group flex-1">
+            <label for="courseId" class="block text-sm font-medium mb-1 text-gray-700">
+              Khóa học <span class="required text-red-500">(*)</span>
+            </label>
+            <select
+              id="courseId"
+              formControlName="courseId"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=courseId?.invalid && courseId?.touched"
+            >
+              <option value="" disabled>Chọn</option>
+              <option *ngFor="let course of courses" [value]="course.id">
+                {{ course.name }}
+              </option>
+            </select>
+            <div class="error-message text-xs text-red-600 mt-1" *ngIf="courseId?.invalid && courseId?.touched">
+              <span *ngIf="courseId?.errors?.['required']">Vui lòng chọn khóa học</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:space-x-4">
+          <!-- Họ tên -->
+          <div class="form-group flex-1 mb-4 md:mb-0">
+            <label for="fullName" class="block text-sm font-medium mb-1 text-gray-700">
+              Họ Tên <span class="required text-red-500">(*)</span>
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              formControlName="fullName"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=fullName?.invalid && fullName?.touched"
+              placeholder="Nhập họ và tên của bạn"
+            />
+            <div class="error-message text-xs text-red-600 mt-1" *ngIf="fullName?.invalid && fullName?.touched">
+              <span *ngIf="fullName?.errors?.['required']">Họ tên là bắt buộc</span>
+              <span *ngIf="fullName?.errors?.['minlength']">Họ tên phải có ít nhất 2 ký tự</span>
+            </div>
+          </div>
+          <!-- Số điện thoại -->
+          <div class="form-group flex-1">
+            <label for="phoneNumber" class="block text-sm font-medium mb-1 text-gray-700">
+              Số điện thoại <span class="required text-red-500">(*)</span>
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=phoneNumber?.invalid && phoneNumber?.touched"
+              placeholder="Nhập số điện thoại (10-11 số)"
+            />
+            <div class="error-message text-xs text-red-600 mt-1" *ngIf="phoneNumber?.invalid && phoneNumber?.touched">
+              <span *ngIf="phoneNumber?.errors?.['required']">Số điện thoại là bắt buộc</span>
+              <span *ngIf="phoneNumber?.errors?.['pattern']">Số điện thoại không hợp lệ (10-11 số)</span>
+            </div>
+          </div>
+        </div>
+        <!-- Email + Ghi chú -->
+        <div class="flex flex-col md:flex-row md:space-x-4">
+          <!-- Email -->
+          <div class="form-group flex-1 mb-4 md:mb-0">
+            <label for="email" class="block text-sm font-medium mb-1 text-gray-700">
+              Email <span class="required text-red-500">(*)</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=email?.invalid && email?.touched"
+              placeholder="Nhập email của bạn"
+            />
+            <div class="error-message text-xs text-red-600 mt-1" *ngIf="email?.invalid && email?.touched">
+              <span *ngIf="email?.errors?.['required']">Email là bắt buộc</span>
+              <span *ngIf="email?.errors?.['email']">Email không hợp lệ</span>
+            </div>
+          </div>
+          <!-- Ghi chú -->
+          <div class="form-group flex-1 flex flex-col">
+            <label for="note" class="block text-sm font-medium mb-1 text-gray-700">
+              Ghi chú
+            </label>
+            <textarea
+              id="note"
+              formControlName="note"
+              class="form-control textarea block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[46px]"
+              rows="2"
+              placeholder="Nhập ghi chú (nếu có)"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Error Message and Success Message -->
+        <div class="mt-2">
+          <div class="error-message global-error text-sm text-red-700 font-medium" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <div class="success-message text-sm text-green-600 font-medium" *ngIf="successMessage">
+            {{ successMessage }}
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end pt-4">
+          <button
+            type="submit"
+            class="btn btn-primary bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+            [disabled]="isLoading || enrollmentForm.invalid"
+          >
+            <ng-container *ngIf="!isLoading">Đăng Ký</ng-container>
+            <ng-container *ngIf="isLoading">
+              <span class="spinner border-2 border-t-2 border-white border-opacity-50 rounded-full w-4 h-4 animate-spin mr-2"></span>
+              Đang xử lý...
+            </ng-container>
+          </button>
+        </div>
+      </form>
     </div>
-
-    <form [formGroup]="enrollmentForm" (ngSubmit)="onSubmit()" class="enrollment-form">
-      <!-- Lớp Học -->
-      <div class="form-group">
-        <label for="classroomId">
-          Lớp Học <span class="required">(*)</span>
-        </label>
-        <select
-          id="classroomId"
-          formControlName="classroomId"
-          class="form-control"
-          [class.invalid]="classroomId?.invalid && classroomId?.touched"
-        >
-          <option value="" disabled>Chọn</option>
-          <option *ngFor="let classroom of classrooms" [value]="classroom.id">
-            {{ classroom.classroomName }}
-          </option>
-        </select>
-        <div class="error-message" *ngIf="classroomId?.invalid && classroomId?.touched">
-          <span *ngIf="classroomId?.errors?.['required']">Vui lòng chọn lớp học</span>
-        </div>
-      </div>
-
-      <!-- Khóa học -->
-      <div class="form-group">
-        <label for="courseId">
-          Khóa học <span class="required">(*)</span>
-        </label>
-        <select
-          id="courseId"
-          formControlName="courseId"
-          class="form-control"
-          [class.invalid]="courseId?.invalid && courseId?.touched"
-        >
-          <option value="" disabled>Chọn</option>
-          <option *ngFor="let course of courses" [value]="course.id">
-            {{ course.name }}
-          </option>
-        </select>
-        <div class="error-message" *ngIf="courseId?.invalid && courseId?.touched">
-          <span *ngIf="courseId?.errors?.['required']">Vui lòng chọn khóa học</span>
-        </div>
-      </div>
-
-      <!-- Họ Tên -->
-      <div class="form-group">
-        <label for="fullName">
-          Họ Tên <span class="required">(*)</span>
-        </label>
-        <input
-          type="text"
-          id="fullName"
-          formControlName="fullName"
-          class="form-control"
-          [class.invalid]="fullName?.invalid && fullName?.touched"
-          placeholder="Nhập họ và tên của bạn"
-        />
-        <div class="error-message" *ngIf="fullName?.invalid && fullName?.touched">
-          <span *ngIf="fullName?.errors?.['required']">Họ tên là bắt buộc</span>
-          <span *ngIf="fullName?.errors?.['minlength']">Họ tên phải có ít nhất 2 ký tự</span>
-        </div>
-      </div>
-
-      <!-- Số điện thoại -->
-      <div class="form-group">
-        <label for="phoneNumber">
-          Số điện thoại <span class="required">(*)</span>
-        </label>
-        <input
-          type="tel"
-          id="phoneNumber"
-          formControlName="phoneNumber"
-          class="form-control"
-          [class.invalid]="phoneNumber?.invalid && phoneNumber?.touched"
-          placeholder="Nhập số điện thoại (10-11 số)"
-        />
-        <div class="error-message" *ngIf="phoneNumber?.invalid && phoneNumber?.touched">
-          <span *ngIf="phoneNumber?.errors?.['required']">Số điện thoại là bắt buộc</span>
-          <span *ngIf="phoneNumber?.errors?.['pattern']">Số điện thoại không hợp lệ (10-11 số)</span>
-        </div>
-      </div>
-
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">
-          Email <span class="required">(*)</span>
-        </label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          class="form-control"
-          [class.invalid]="email?.invalid && email?.touched"
-          placeholder="Nhập email của bạn"
-        />
-        <div class="error-message" *ngIf="email?.invalid && email?.touched">
-          <span *ngIf="email?.errors?.['required']">Email là bắt buộc</span>
-          <span *ngIf="email?.errors?.['email']">Email không hợp lệ</span>
-        </div>
-      </div>
-
-      <!-- Ghi chú -->
-      <div class="form-group">
-        <label for="note">Ghi chú</label>
-        <textarea
-          id="note"
-          formControlName="note"
-          class="form-control textarea"
-          rows="4"
-          placeholder="Nhập ghi chú (nếu có)"
-        ></textarea>
-      </div>
-
-      <!-- Error Message -->
-      <div class="error-message global-error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Success Message -->
-      <div class="success-message" *ngIf="successMessage">
-        {{ successMessage }}
-      </div>
-
-      <!-- Submit Button -->
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="isLoading || enrollmentForm.invalid"
-      >
-        <span *ngIf="!isLoading">Đăng Ký</span>
-        <span *ngIf="isLoading" class="loading">
-          <span class="spinner"></span>
-          Đang xử lý...
-        </span>
-      </button>
-    </form>
   </div>
 </div>
-
