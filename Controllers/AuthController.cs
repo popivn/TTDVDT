@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using TTDVDTTNCXH.DTOs;
 using TTDVDTTNCXH.Services;
 
@@ -87,6 +89,44 @@ namespace TTDVDTTNCXH.Controllers
                 {
                     Success = false,
                     Message = $"Đã xảy ra lỗi: {ex.Message}"
+                });
+            }
+        }
+
+        [HttpGet("validate")]
+        [Authorize]
+        public IActionResult Validate()
+        {
+            _logger.LogDebug("Starting token validation. User claims: {Claims}", 
+                string.Join(", ", User.Claims.Select(c => $"{c.Type}={c.Value}")));
+
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                {
+                    _logger.LogDebug("Token invalid: userIdClaim missing or not an integer. Value: {UserIdClaim}", userIdClaim);
+                    return Ok(new ValidateTokenResponse
+                    {
+                        Success = false,
+                        Message = "Token không hợp lệ"
+                    });
+                }
+
+                _logger.LogDebug("Token valid. UserId: {UserId}", userId);
+                return Ok(new ValidateTokenResponse
+                {
+                    Success = true,
+                    UserId = userId
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating token");
+                return Ok(new ValidateTokenResponse
+                {
+                    Success = false,
+                    Message = "Lỗi khi validate token"
                 });
             }
         }

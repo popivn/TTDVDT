@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
 
   loginForm: FormGroup;
@@ -43,10 +44,12 @@ export class LoginComponent {
           if (response.success) {
             // Lưu token nếu có
             if (response.token) {
-              localStorage.setItem('token', response.token);
+              this.authService.saveToken(response.token);
             }
-            // Chuyển hướng đến trang chủ
-            this.router.navigate(['/home']);
+            // Lấy returnUrl từ query params hoặc mặc định là /force-admin
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/force-admin';
+            // Chuyển hướng đến returnUrl hoặc admin dashboard
+            this.router.navigateByUrl(returnUrl);
           } else {
             this.errorMessage = response.message || 'Đăng nhập thất bại';
           }

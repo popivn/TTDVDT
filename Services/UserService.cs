@@ -9,10 +9,12 @@ namespace TTDVDTTNCXH.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITokenService _tokenService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
@@ -76,12 +78,15 @@ namespace TTDVDTTNCXH.Services
                 };
             }
 
+            // Generate JWT token
+            var token = _tokenService.GenerateToken(user.Id, user.Email);
+
             return new LoginResponse
             {
                 Success = true,
                 Message = "Đăng nhập thành công",
                 UserId = user.Id,
-                Token = null // TODO: Implement JWT token
+                Token = token
             };
         }
 

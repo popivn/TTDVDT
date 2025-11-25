@@ -23,6 +23,34 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
+// Cấu hình JWT Authentication
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "oItPLzgYHnNz3KfJU1yzHBFjxZk5ob2UhYuzrPGaJHY=";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "TTDVDTTNCXH";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "TTDVDTTNCXH";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(jwtSecret)
+        )
+    };
+});
+
+builder.Services.AddAuthorization();
+
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
@@ -56,6 +84,7 @@ builder.Services.AddScoped<ISettingService, SettingService>();
 builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IClassroomService, ClassroomService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
@@ -87,6 +116,10 @@ else
     app.UseDefaultFiles();
     app.UseStaticFiles();
 }
+
+// Authentication & Authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Map controllers
 app.MapControllers();

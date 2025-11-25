@@ -8,6 +8,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { SettingsManagementComponent } from './components/admin/settings-management/settings-management.component';
 import { CoursesManagementComponent } from './components/admin/courses-management/courses-management.component';
 import { ClassroomsManagementComponent } from './components/admin/classrooms-management/classrooms-management.component';
+import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   // Routes with layout (header + footer)
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
   {
     path: 'force-admin',
     component: AdminLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
