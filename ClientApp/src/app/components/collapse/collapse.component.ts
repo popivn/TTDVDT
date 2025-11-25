@@ -8,6 +8,7 @@ import { CourseTableItem } from '../course-table/course-table-item.interface';
 import { CourseTableMobileComponent } from '../course-table-mobile/course-table-mobile.component';
 import { CourseService } from '../../services/course.service';
 import { map, Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-collapse',
@@ -26,6 +27,10 @@ export class CollapseComponent implements OnInit {
   windowWidth: number = window.innerWidth;
   
   private courseService = inject(CourseService);
+  
+  // Cache Observable cho mỗi itemId để tránh tạo Observable mới mỗi lần change detection
+  // Điều này ngăn async pipe unsubscribe/subscribe lại → tránh chớp nháy
+  private coursesObservables: Map<number | string, Observable<CourseTableItem[]>> = new Map();
   
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -80,10 +85,17 @@ export class CollapseComponent implements OnInit {
 
   // Lấy dữ liệu khóa học cho một item
   getCourseDataForItem(itemId: number | string): Observable<CourseTableItem[]> {
+    // Nếu đã có Observable trong cache, return nó (tránh tạo Observable mới)
+    // Điều này đảm bảo async pipe luôn dùng cùng một Observable instance
+    if (this.coursesObservables.has(itemId)) {
+      return this.coursesObservables.get(itemId)!;
+    }
+
     // Convert itemId sang number (classId)
     const classId = typeof itemId === 'string' ? parseInt(itemId, 10) : itemId;
     
-    return this.courseService.getCoursesByClassIdCached(classId).pipe(
+    // Tạo Observable mới và cache nó (chỉ tạo một lần)
+    const observable$ = this.courseService.getCoursesByClassIdCached(classId).pipe(
       map(courses => 
         (courses ?? []).map(course => ({
           Id: course.id,
@@ -94,7 +106,13 @@ export class CollapseComponent implements OnInit {
           CreatedAt: course.createdAt,
           UpdatedAt: course.updatedAt
         }))
-      )
+      ),
+      shareReplay(1) // Cache giá trị cuối cùng và share cho multiple subscribers
     );
+
+    // Lưu vào cache để dùng lại
+    this.coursesObservables.set(itemId, observable$);
+    
+    return observable$;
   }
 }

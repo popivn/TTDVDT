@@ -14,6 +14,7 @@ import { InfiniteCarouselComponent } from '../infinite-carousel/infinite-carouse
 import { CarouselItem } from '../infinite-carousel/carousel-item.interface';
 import { CollapseComponent } from '../collapse/collapse.component';
 import { CollapseItem } from '../collapse/collapse-item.interface';
+import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,8 @@ import { CollapseItem } from '../collapse/collapse-item.interface';
     CourseCardComponent,
     NewsCardComponent,
     InfiniteCarouselComponent, // Thêm component mới
-    CollapseComponent // Thêm component mới
+    CollapseComponent, // Thêm component mới
+    ScrollRevealDirective // Directive cho scroll reveal animation
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

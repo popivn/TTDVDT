@@ -1,8 +1,10 @@
 <div class="relative">
-  <app-banner></app-banner>
+  <section appScrollReveal>
+    <app-banner></app-banner>
+  </section>
 
   <!-- Infinite Carousel: Đè lên banner -->
-  <div class="absolute top-[380px] left-1/2 -translate-x-1/2 z-10 flex justify-center w-full overflow-x-auto scrollbar-hide">
+  <section appScrollReveal [delay]="100" class="absolute top-[380px] left-1/2 -translate-x-1/2 z-10 flex justify-center w-full overflow-x-auto scrollbar-hide">
     <app-infinite-carousel
       *ngIf="!loadingClassrooms && !classroomError && carouselItems.length > 0"
       [items]="carouselItems"
@@ -12,10 +14,10 @@
       [showNavigation]="true"
       (itemClick)="onCarouselItemClick($event)">
     </app-infinite-carousel>
-  </div>
+  </section>
 
   <!-- Service Cards Section -->
-  <section class="py-12 px-4 bg-gray-50">
+  <section appScrollReveal [delay]="200" class="py-12 px-4 bg-gray-50">
     <div class="container mx-auto max-w-6xl">
       <!-- Loading State -->
       <div *ngIf="loadingClassrooms" class="text-center py-8">
@@ -34,8 +36,8 @@
     </div>
   </section>
   <!-- Collapse Component Example -->
-   <div id="pending-class-list" class="mt-[160px]">
+   <section appScrollReveal [delay]="300" id="pending-class-list" class="mt-[160px]">
      <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">DANH SÁCH CÁC LỚP HỌC CHỜ KHAI GIẢNG</h1>
      <app-collapse #collapseComponent [items]="carouselItems"></app-collapse>
-   </div>
+   </section>
 </div>

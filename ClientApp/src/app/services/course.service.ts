@@ -34,9 +34,8 @@ export class CourseService {
   private http = inject(HttpClient);
   private apiUrl = 'api/course';
   
-  // Cache để lưu courses theo classId
-  private coursesCache: Map<number, Course[]> = new Map();
-  private loadingCourses: Set<number> = new Set();
+  // Cache Observable thay vì cache data để đảm bảo luôn return cùng Observable instance
+  private coursesObservables: Map<number, Observable<Course[]>> = new Map();
 
   getAllCourses(): Observable<CourseResponse> {
     return this.http.get<CourseResponse>(this.apiUrl);
@@ -51,46 +50,35 @@ export class CourseService {
   }
 
   /**
-   * Lấy courses theo classId với cache
-   * Trả về Observable<Course[]> thay vì CourseResponse để dễ sử dụng
+   * Lấy courses theo classId với cache Observable
+   * Cache Observable thay vì cache data để đảm bảo luôn return cùng Observable instance
+   * Điều này ngăn async pipe unsubscribe/subscribe lại → tránh chớp nháy
    */
   getCoursesByClassIdCached(classId: number): Observable<Course[]> {
-    // Kiểm tra cache trước
-    if (this.coursesCache.has(classId)) {
-      return of(this.coursesCache.get(classId)!);
+    // Nếu đã có Observable trong cache, return nó (cùng instance)
+    if (this.coursesObservables.has(classId)) {
+      return this.coursesObservables.get(classId)!;
     }
 
-    // Nếu đang load thì không load lại
-    if (this.loadingCourses.has(classId)) {
-      return of([]);
-    }
-
-    // Load từ API
-    this.loadingCourses.add(classId);
-    
-    return this.getCoursesByClassId(classId).pipe(
+    // Tạo Observable mới và cache nó
+    const observable$ = this.getCoursesByClassId(classId).pipe(
       map(response => {
-        this.loadingCourses.delete(classId);
-        
         if (response.success && response.courses) {
-          // Lưu vào cache
-          this.coursesCache.set(classId, response.courses);
           return response.courses;
         }
-        
-        // Lưu mảng rỗng vào cache
-        this.coursesCache.set(classId, []);
         return [];
       }),
       catchError(error => {
-        this.loadingCourses.delete(classId);
         console.error('Error loading courses for classId:', classId, error);
-        // Lưu mảng rỗng vào cache khi có lỗi
-        this.coursesCache.set(classId, []);
         return of([]);
       }),
-      shareReplay(1) // Share kết quả cho multiple subscribers
+      shareReplay(1) // Cache giá trị cuối cùng và share cho multiple subscribers
     );
+
+    // Cache Observable để dùng lại
+    this.coursesObservables.set(classId, observable$);
+    
+    return observable$;
   }
 
   /**
@@ -98,11 +86,9 @@ export class CourseService {
    */
   clearCache(classId?: number): void {
     if (classId) {
-      this.coursesCache.delete(classId);
-      this.loadingCourses.delete(classId);
+      this.coursesObservables.delete(classId);
     } else {
-      this.coursesCache.clear();
-      this.loadingCourses.clear();
+      this.coursesObservables.clear();
     }
   }
 
