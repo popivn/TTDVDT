@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { BannerComponent } from '../banner/banner.component';
@@ -17,9 +17,11 @@ import { CollapseItem } from '../collapse/collapse-item.interface';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 import { EnrollmentFormComponent } from '../enrollment-form/enrollment-form.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-
+import { CourseTableItem } from '../course-table/course-table-item.interface';
 // Khai báo icon Close (brand) từ thư viện đã cài (ví dụ: FontAwesome)
 import { faXmark as faClose } from '@fortawesome/free-solid-svg-icons'; // hoặc từ brands nếu dùng brands
+import { EventBusService } from '../../services/event-bus.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -39,10 +41,11 @@ import { faXmark as faClose } from '@fortawesome/free-solid-svg-icons'; // hoặ
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private settingService = inject(SettingService);
   private facultyService = inject(FacultyService);
   private classroomService = inject(ClassroomService);
+  private eventBus = inject(EventBusService); // Thêm inject EventBusService
 
   // Icon Close khai báo để dùng trong template
   faClose = faClose;
@@ -61,9 +64,12 @@ export class HomeComponent implements OnInit {
   error: string | null = null;
   classroomError: string | null = null;
   showRegisterForm: boolean = false; // dùng để hiển thị popup/form
+  
+  // Subscription để unsubscribe khi component destroy
+  private registerClickSubscription?: Subscription;
 
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLElement>;
-
+  selectedItem?: CourseTableItem;
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.updateVisibleCards();
@@ -77,6 +83,9 @@ export class HomeComponent implements OnInit {
     this.loadFaculties();
     // Load classrooms from API
     this.loadClassrooms();
+    
+    // Subscribe để nhận event từ CourseTableComponent
+    this.subscribeToRegisterClick();
   }
 
   private updateVisibleCards() {
@@ -94,11 +103,8 @@ export class HomeComponent implements OnInit {
     const settings = this.settingService.getSettingsCache();
     
     if (settings) {
-      
       Object.entries(settings).forEach(([key, value]) => {
       });
-    } else {
-      console.warn('Settings cache is empty. Settings may not have been loaded yet.');
     }
   }
 
@@ -145,8 +151,6 @@ export class HomeComponent implements OnInit {
             name: classroom.classroomName,
             description: classroom.description
           }));
-          
-          console.log('Classrooms loaded:', this.carouselItems);
         } else {
           this.classroomError = response.message || 'Failed to load classrooms';
           console.error('Error loading classrooms:', this.classroomError);
@@ -219,5 +223,30 @@ export class HomeComponent implements OnInit {
 
   closeRegisterForm() {
     this.showRegisterForm = false; // dùng để đóng form
+  }
+
+  /**
+   * Xử lý khi nhận event register click từ CourseTableComponent
+   */
+  onRegister(item: CourseTableItem) {
+    this.selectedItem = item;
+    this.showRegisterForm = true;
+  }
+
+  /**
+   * Subscribe để nhận event register click từ CourseTableComponent
+   * (không cần đi qua CollapseComponent)
+   */
+  private subscribeToRegisterClick(): void {
+    this.registerClickSubscription = this.eventBus.registerClick$.subscribe(item => {
+      this.onRegister(item);
+    });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe để tránh memory leak
+    if (this.registerClickSubscription) {
+      this.registerClickSubscription.unsubscribe();
+    }
   }
 }

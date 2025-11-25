@@ -25,7 +25,7 @@
       class="collapse-content p-4 bg-white border-t border-gray-200"
     >
       <!-- Hiển thị bảng cho desktop/tablet -->
-      <app-course-table *ngIf="windowWidth >= 1024" [data]="(getCourseDataForItem(item.id) | async) ?? []"></app-course-table>
+      <app-course-table  *ngIf="windowWidth >= 1024" [data]="(getCourseDataForItem(item.id) | async) ?? []"></app-course-table>
       <!-- Hiển thị bảng cho màn hình mobile -->
       <app-course-table-mobile *ngIf="windowWidth < 1024" [data]="(getCourseDataForItem(item.id) | async) ?? []"></app-course-table-mobile>
     </div>

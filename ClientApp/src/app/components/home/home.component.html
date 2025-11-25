@@ -43,9 +43,13 @@
 
    <div 
       *ngIf="showRegisterForm" 
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 "
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      style="overflow-y: auto;"
     >
-      <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-auto p-0 rounded-full">
+      <div 
+        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-auto p-0"
+        style="max-height: 95vh; overflow-y: auto;"
+      >
         <!-- Close button -->
         <button 
           (click)="closeRegisterForm()"
@@ -57,7 +61,7 @@
             class="transition-transform duration-300"
           ></fa-icon>
         </button>
-        <app-enrollment-form></app-enrollment-form>
+        <app-enrollment-form [item]="selectedItem"></app-enrollment-form>
       </div>
    </div>
 </div>

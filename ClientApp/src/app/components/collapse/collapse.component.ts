@@ -103,6 +103,7 @@ export class CollapseComponent implements OnInit {
           Duration: course.duration,
           Tuition: course.tuition,
           ClassId: course.classId,
+          ClassroomName: course.classroom?.classroomName ?? '',
           CreatedAt: course.createdAt,
           UpdatedAt: course.updatedAt
         }))

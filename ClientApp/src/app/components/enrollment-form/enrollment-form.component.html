@@ -30,9 +30,15 @@
             <select
               id="courseId"
               formControlName="courseId"
-              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=courseId?.invalid && courseId?.touched"
+              [disabled]="!classroomId?.value || isLoadingCourses"
+              class="form-control block w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 [class.invalid]=courseId?.invalid && courseId?.touched disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
-              <option value="" disabled>Chọn</option>
+              <option value="" disabled>
+                <ng-container *ngIf="!classroomId?.value">Vui lòng chọn lớp học trước</ng-container>
+                <ng-container *ngIf="classroomId?.value && isLoadingCourses">Đang tải...</ng-container>
+                <ng-container *ngIf="classroomId?.value && !isLoadingCourses && courses.length === 0">Không có khóa học</ng-container>
+                <ng-container *ngIf="classroomId?.value && !isLoadingCourses && courses.length > 0">Chọn khóa học</ng-container>
+              </option>
               <option *ngFor="let course of courses" [value]="course.id">
                 {{ course.name }}
               </option>
