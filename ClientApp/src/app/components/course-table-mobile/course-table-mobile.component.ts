@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CourseTableItem } from '../course-table/course-table-item.interface';
-
+import { EventBusService } from '../../services/event-bus.service';
 @Component({
   selector: 'app-course-table-mobile',
   standalone: true,
@@ -11,7 +11,8 @@ import { CourseTableItem } from '../course-table/course-table-item.interface';
 })
 export class CourseTableMobileComponent implements OnInit {
   @Input() data: CourseTableItem[] = [];
-
+  @Output() onRegister: EventEmitter<CourseTableItem> = new EventEmitter<CourseTableItem>();
+  private eventBus = inject(EventBusService); // Inject EventBusService
   ngOnInit() {
     if (this.data && this.data.length > 0) {
       console.log('Course Table Mobile Data:', this.data);
@@ -29,8 +30,12 @@ export class CourseTableMobileComponent implements OnInit {
   }
 
   onRegisterClick(item: CourseTableItem) {
-    console.log('Register clicked for:', item);
-    // TODO: Navigate to enrollment form or handle registration
+    
+    // Emit qua EventBus (trực tiếp đến HomeComponent)
+    this.eventBus.emitRegisterClick(item);
+    
+    // Vẫn emit qua @Output() để backward compatible (nếu CollapseComponent cần)
+    this.onRegister.emit(item);
   }
 }
 
