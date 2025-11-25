@@ -10,6 +10,7 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   @Input() threshold = 0.1; // threshold cho Intersection Observer
 
   private observer?: IntersectionObserver;
+  private isRevealed = false; // Track trạng thái reveal
 
   constructor(
     private el: ElementRef,
@@ -17,6 +18,31 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // Set initial hidden state
+    this.setHiddenState();
+
+    // Create Intersection Observer
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Element vào viewport → Reveal
+          this.reveal();
+        } else if (this.isRevealed) {
+          // Element ra khỏi viewport và đã reveal trước đó → Reset về hidden
+          this.resetToHidden();
+        }
+      },
+      {
+        threshold: this.threshold,
+        rootMargin: '0px 0px -50px 0px' // Trigger khi element còn cách viewport 50px
+      }
+    );
+
+    // Start observing (KHÔNG unobserve để có thể lặp lại)
+    this.observer.observe(this.el.nativeElement);
+  }
+
+  private setHiddenState() {
     // Set initial hidden state
     this.renderer.addClass(this.el.nativeElement, 'opacity-0');
     this.renderer.addClass(this.el.nativeElement, 'translate-y-8');
@@ -27,33 +53,38 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
     if (this.delay > 0) {
       this.renderer.setStyle(this.el.nativeElement, 'transition-delay', `${this.delay}ms`);
     }
+  }
 
-    // Create Intersection Observer
-    this.observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          // Remove hidden classes
-          this.renderer.removeClass(this.el.nativeElement, 'opacity-0');
-          this.renderer.removeClass(this.el.nativeElement, 'translate-y-8');
-          
-          // Add reveal classes
-          const classes = this.animationClass.split(' ');
-          classes.forEach(cls => {
-            this.renderer.addClass(this.el.nativeElement, cls);
-          });
+  private reveal() {
+    if (this.isRevealed) return; // Đã reveal rồi thì không làm gì
 
-          // Unobserve after reveal (chỉ reveal 1 lần)
-          this.observer?.unobserve(this.el.nativeElement);
-        }
-      },
-      {
-        threshold: this.threshold,
-        rootMargin: '0px 0px -50px 0px' // Trigger khi element còn cách viewport 50px
-      }
-    );
+    // Remove hidden classes
+    this.renderer.removeClass(this.el.nativeElement, 'opacity-0');
+    this.renderer.removeClass(this.el.nativeElement, 'translate-y-8');
+    
+    // Add reveal classes
+    const classes = this.animationClass.split(' ');
+    classes.forEach(cls => {
+      this.renderer.addClass(this.el.nativeElement, cls);
+    });
 
-    // Start observing
-    this.observer.observe(this.el.nativeElement);
+    this.isRevealed = true;
+  }
+
+  private resetToHidden() {
+    if (!this.isRevealed) return; // Chưa reveal thì không cần reset
+
+    // Remove reveal classes
+    const classes = this.animationClass.split(' ');
+    classes.forEach(cls => {
+      this.renderer.removeClass(this.el.nativeElement, cls);
+    });
+
+    // Add hidden classes lại
+    this.renderer.addClass(this.el.nativeElement, 'opacity-0');
+    this.renderer.addClass(this.el.nativeElement, 'translate-y-8');
+
+    this.isRevealed = false;
   }
 
   ngOnDestroy() {
