@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 
@@ -82,12 +82,39 @@ export class AuthService {
       map(userInfo => userInfo?.email || null)
     );
   }
+  private getApiKeyFromUrl(): string | null {
+    // Lấy APIKEY từ query string của URL hiện tại
+    // Người dùng phải tự thêm vào URL: /login?APIKEY=13467902 hoặc /register?APIKEY=13467902
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('APIKEY');
+  }
+
   register(request: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request);
+    // Lấy APIKEY từ query string của URL hiện tại
+    const apiKey = this.getApiKeyFromUrl();
+    if (!apiKey) {
+      return throwError(() => ({
+        error: {
+          success: false,
+          message: 'APIKEY parameter is required in URL. Example: /register?APIKEY=13467902'
+        }
+      }));
+    }
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register?APIKEY=${encodeURIComponent(apiKey)}`, request);
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request);
+    // Lấy APIKEY từ query string của URL hiện tại
+    const apiKey = this.getApiKeyFromUrl();
+    if (!apiKey) {
+      return throwError(() => ({
+        error: {
+          success: false,
+          message: 'APIKEY parameter is required in URL. Example: /login?APIKEY=POPIHANDSOMEBABY'
+        }
+      }));
+    }
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login?APIKEY=${encodeURIComponent(apiKey)}`, request);
   }
 
   saveToken(token: string): void {

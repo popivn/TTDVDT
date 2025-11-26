@@ -5,6 +5,7 @@ import { ClassroomService, Classroom } from '../../services/classroom.service';
 import { CourseService } from '../../services/course.service';
 import { MailService } from '../../services/mail.service';
 import { EmailTemplateService } from '../../services/email-template.service';
+import { RegistrationService } from '../../services/registration.service';
 import { CourseTableItem } from '../course-table/course-table-item.interface';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
@@ -26,6 +27,7 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
   private courseService = inject(CourseService);
   private mailService = inject(MailService);
   private emailTemplateService = inject(EmailTemplateService);
+  private registrationService = inject(RegistrationService);
   enrollmentForm: FormGroup;
   classrooms: Classroom[] = [];
   courses: { id: number; name: string; classId: number }[] = [];
@@ -188,22 +190,48 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
         take(1)
       ).subscribe({
         next: (response: any) => {
-          this.isLoading = false;
-          
           // Response từ .NET API đã là JSON object
           console.log('Mail queue response:', response);
           
+          // Chỉ lưu vào database khi email gửi thành công
           if (response.success) {
-            this.successMessage = 'Đăng ký thành công! Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+            // Lưu thông tin đăng ký vào database
+            const registrationData = {
+              fullName: formData.fullName,
+              email: formData.email,
+              phoneNumber: formData.phoneNumber,
+              classroomId: classroomId,
+              courseId: courseId,
+              note: formData.note || undefined
+            };
+
+            this.registrationService.createRegistration(registrationData).subscribe({
+              next: (regResponse) => {
+                this.isLoading = false;
+                if (regResponse.success) {
+                  this.successMessage = 'Đăng ký thành công! Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+                } else {
+                  console.warn('Failed to save registration:', regResponse.message);
+                  this.successMessage = 'Đăng ký thành công! Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+                }
+                this.resetForm();
+              },
+              error: (regError) => {
+                console.error('Error saving registration:', regError);
+                this.isLoading = false;
+                // Vẫn hiển thị thành công vì email đã gửi được
+                this.successMessage = 'Đăng ký thành công! Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+                this.resetForm();
+              }
+            });
           } else {
-            // Vẫn hiển thị thành công cho user, nhưng log warning
+            // Email gửi không thành công, không lưu vào database
+            this.isLoading = false;
             console.warn('Mail queue API returned success=false:', response.message);
             this.successMessage = 'Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.';
+            this.resetForm();
           }
           
-          this.enrollmentForm.reset();
-          // Reset courses khi reset form
-          this.courses = [];
           // Cleanup subscription
           this.mailSubscription?.unsubscribe();
           this.mailSubscription = undefined;
@@ -214,8 +242,7 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
           // Vẫn hiển thị thành công nếu có lỗi gửi email (không block user)
           // API có thể thành công nhưng response có lỗi (như CORS), vẫn coi là thành công
           this.successMessage = 'Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.';
-          this.enrollmentForm.reset();
-          this.courses = [];
+          this.resetForm();
           // Cleanup subscription
           this.mailSubscription?.unsubscribe();
           this.mailSubscription = undefined;
@@ -226,6 +253,11 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  private resetForm() {
+    this.enrollmentForm.reset();
+    // Reset courses khi reset form
+    this.courses = [];
+  }
 
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {

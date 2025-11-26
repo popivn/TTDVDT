@@ -9,7 +9,8 @@ import {
   faGear, 
   faHome,
   faBars,
-  faXmark
+  faXmark,
+  faUserPlus
 } from '@fortawesome/free-solid-svg-icons';
 
 interface MenuItem {
@@ -40,6 +41,7 @@ export class SidebarComponent {
   faBuilding = faBuilding;
   faGear = faGear;
   faHome = faHome;
+  faUserPlus = faUserPlus;
 
   toggle() {
     this.isOpen = !this.isOpen;
@@ -53,6 +55,7 @@ export class SidebarComponent {
     { label: 'Dashboard', route: '/force-admin', icon: faChartLine },
     { label: 'Quản lý khóa học', route: '/force-admin/courses', icon: faBook },
     { label: 'Quản lý phòng học', route: '/force-admin/classrooms', icon: faBuilding },
+    { label: 'Quản lý đăng ký', route: '/force-admin/registrations', icon: faUserPlus },
     { label: 'Cài đặt hệ thống', route: '/force-admin/settings', icon: faGear },
     { label: 'Về trang chủ', route: '/home', icon: faHome }
   ];

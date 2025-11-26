@@ -1,0 +1,200 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Quản lý Đăng ký</h1>
+        <p class="text-gray-600">Xem và quản lý các đăng ký khóa học</p>
+      </div>
+      <button
+        (click)="exportToExcel()"
+        [disabled]="filteredRegistrations.length === 0"
+        class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition flex items-center gap-2"
+      >
+        <fa-icon [icon]="faFileExcel"></fa-icon>
+        Export Excel
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div *ngIf="errorMessage" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+      {{ successMessage }}
+    </div>
+
+    <!-- Search -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div class="relative">
+        <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+          placeholder="Tìm kiếm theo họ tên, email, số điện thoại, lớp học, khóa học..."
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading && registrations.length === 0" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">Đang tải...</p>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading || registrations.length > 0" class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                (click)="onSort('fullName')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Họ và tên
+                <span *ngIf="sortColumn === 'fullName'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th
+                (click)="onSort('email')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Email
+                <span *ngIf="sortColumn === 'email'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th
+                (click)="onSort('phoneNumber')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Số điện thoại
+                <span *ngIf="sortColumn === 'phoneNumber'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th
+                (click)="onSort('classroomName')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Lớp học
+                <span *ngIf="sortColumn === 'classroomName'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th
+                (click)="onSort('courseName')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Khóa học
+                <span *ngIf="sortColumn === 'courseName'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Ghi chú
+              </th>
+              <th
+                (click)="onSort('createdAt')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                Ngày đăng ký
+                <span *ngIf="sortColumn === 'createdAt'" class="ml-1">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Thao tác
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let registration of paginatedRegistrations" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ registration.fullName }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ registration.email }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ registration.phoneNumber }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ registration.classroomName }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ registration.courseName }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" [title]="registration.note || ''">
+                {{ registration.note || '-' }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ formatDate(registration.createdAt) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button
+                  (click)="deleteRegistration(registration.id)"
+                  [disabled]="deletingId === registration.id"
+                  class="text-red-600 hover:text-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Xóa"
+                >
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedRegistrations.length === 0">
+              <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                Không có dữ liệu
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="totalPages > 1" class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
+        <div class="text-sm text-gray-700">
+          Hiển thị {{ paginationStart }} - {{ paginationEnd }} của {{ filteredRegistrations.length }} kết quả
+        </div>
+        <div class="flex gap-2">
+          <button
+            (click)="goToFirstPage()"
+            [disabled]="currentPage === 1"
+            class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            Đầu
+          </button>
+          <button
+            (click)="goToPreviousPage()"
+            [disabled]="currentPage === 1"
+            class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            Trước
+          </button>
+          <span class="px-3 py-2 text-gray-700">
+            Trang {{ currentPage }} / {{ totalPages }}
+          </span>
+          <button
+            (click)="goToNextPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            Sau
+          </button>
+          <button
+            (click)="goToLastPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            Cuối
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

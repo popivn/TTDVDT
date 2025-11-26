@@ -2,10 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faBook, faBuilding, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faBuilding, faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { CourseService } from '../../services/course.service';
 import { ClassroomService } from '../../services/classroom.service';
 import { SettingService } from '../../services/setting.service';
+import { RegistrationService } from '../../services/registration.service';
 
 @Component({
   selector: 'app-admin',
@@ -22,21 +23,25 @@ export class AdminComponent implements OnInit {
   private courseService = inject(CourseService);
   private classroomService = inject(ClassroomService);
   private settingService = inject(SettingService);
+  private registrationService = inject(RegistrationService);
 
   // Icons
   faBook = faBook;
   faBuilding = faBuilding;
   faGear = faGear;
+  faUserPlus = faUserPlus;
 
   stats = {
     totalCourses: 0,
     totalClassrooms: 0,
-    totalSettings: 0
+    totalSettings: 0,
+    totalRegistrations: 0
   };
 
   quickActions = [
     { label: 'Quản lý khóa học', route: '/force-admin/courses', icon: faBook },
     { label: 'Quản lý phòng học', route: '/force-admin/classrooms', icon: faBuilding },
+    { label: 'Quản lý đăng ký', route: '/force-admin/registrations', icon: faUserPlus },
     { label: 'Cài đặt hệ thống', route: '/force-admin/settings', icon: faGear }
   ];
 
@@ -68,6 +73,15 @@ export class AdminComponent implements OnInit {
       next: (response) => {
         if (response.success && response.settings) {
           this.stats.totalSettings = Object.keys(response.settings).length;
+        }
+      }
+    });
+
+    // Load registrations count
+    this.registrationService.getAllRegistrations().subscribe({
+      next: (response) => {
+        if (response.success && response.registrations) {
+          this.stats.totalRegistrations = response.registrations.length;
         }
       }
     });
