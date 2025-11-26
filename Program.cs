@@ -71,6 +71,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+// Đăng ký HttpClient cho MailController
+builder.Services.AddHttpClient();
+
 // Đăng ký Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISettingRepository, SettingRepository>();

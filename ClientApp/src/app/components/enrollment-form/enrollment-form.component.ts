@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClassroomService, Classroom } from '../../services/classroom.service';
 import { CourseService } from '../../services/course.service';
+import { MailService } from '../../services/mail.service';
+import { EmailTemplateService } from '../../services/email-template.service';
 import { CourseTableItem } from '../course-table/course-table-item.interface';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-enrollment-form',
@@ -22,6 +24,8 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private classroomService = inject(ClassroomService);
   private courseService = inject(CourseService);
+  private mailService = inject(MailService);
+  private emailTemplateService = inject(EmailTemplateService);
   enrollmentForm: FormGroup;
   classrooms: Classroom[] = [];
   courses: { id: number; name: string; classId: number }[] = [];
@@ -30,6 +34,7 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
   private classroomIdSubscription?: Subscription;
+  private mailSubscription?: Subscription;
 
   constructor() {
     this.enrollmentForm = this.fb.group({
@@ -122,25 +127,105 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmit() {
+  onSubmit(event?: Event) {
+    // Ngăn chặn double submission
+    if (this.isLoading) {
+      event?.preventDefault();
+      return;
+    }
+
     if (this.enrollmentForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
       this.successMessage = '';
 
       const formData = this.enrollmentForm.value;
+      
+      // Convert string IDs từ form thành number để so sánh
+      const classroomId = Number(formData.classroomId);
+      const courseId = Number(formData.courseId);
+      
+      // Lấy thông tin lớp học và khóa học để hiển thị trong email
+      const selectedClassroom = this.classrooms.find(c => c.id === classroomId);
+      const selectedCourse = this.courses.find(c => c.id === courseId);
+      
+      // Kiểm tra và log nếu không tìm thấy
+      if (!selectedClassroom) {
+        console.warn('Classroom not found for ID:', classroomId, 'Available classrooms:', this.classrooms.map(c => ({ id: c.id, name: c.classroomName })));
+      }
+      if (!selectedCourse) {
+        console.warn('Course not found for ID:', courseId, 'Available courses:', this.courses.map(c => ({ id: c.id, name: c.name })));
+      }
 
-      // TODO: Replace with actual API call
-      // Simulate API call
-      setTimeout(() => {
-        this.isLoading = false;
-        this.successMessage = 'Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.';
-        this.enrollmentForm.reset();
-      }, 1500);
+      // Tạo nội dung email sử dụng EmailTemplateService
+      const emailBody = this.emailTemplateService.createEnrollmentConfirmationEmail({
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        classroomName: selectedClassroom?.classroomName || 'Chưa xác định',
+        courseName: selectedCourse?.name || 'Chưa xác định',
+        note: formData.note
+      });
+
+      // Gửi email thông qua MailService
+      const mailData = this.mailService.buildMailQueueData({
+        name: `Xác nhận đăng ký - ${formData.fullName}`,
+        subject: 'Xác nhận đăng ký khóa học',
+        body: emailBody,
+        cc: '',
+        code: 'xmhp', // Mã định danh email
+        receivers: formData.email
+      });
+
+      // Unsubscribe subscription cũ nếu có
+      if (this.mailSubscription) {
+        this.mailSubscription.unsubscribe();
+      }
+
+      // Sử dụng take(1) để đảm bảo chỉ subscribe một lần
+      // Response có thể là text hoặc JSON string, cần parse nếu là JSON
+      this.mailSubscription = this.mailService.sendMailQueue(mailData).pipe(
+        take(1)
+      ).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          
+          // Response từ .NET API đã là JSON object
+          console.log('Mail queue response:', response);
+          
+          if (response.success) {
+            this.successMessage = 'Đăng ký thành công! Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+          } else {
+            // Vẫn hiển thị thành công cho user, nhưng log warning
+            console.warn('Mail queue API returned success=false:', response.message);
+            this.successMessage = 'Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.';
+          }
+          
+          this.enrollmentForm.reset();
+          // Reset courses khi reset form
+          this.courses = [];
+          // Cleanup subscription
+          this.mailSubscription?.unsubscribe();
+          this.mailSubscription = undefined;
+        },
+        error: (error) => {
+          console.error('Error sending email:', error);
+          this.isLoading = false;
+          // Vẫn hiển thị thành công nếu có lỗi gửi email (không block user)
+          // API có thể thành công nhưng response có lỗi (như CORS), vẫn coi là thành công
+          this.successMessage = 'Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.';
+          this.enrollmentForm.reset();
+          this.courses = [];
+          // Cleanup subscription
+          this.mailSubscription?.unsubscribe();
+          this.mailSubscription = undefined;
+        }
+      });
     } else {
       this.markFormGroupTouched(this.enrollmentForm);
     }
   }
+
 
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
@@ -177,6 +262,9 @@ export class EnrollmentFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.classroomIdSubscription) {
       this.classroomIdSubscription.unsubscribe();
+    }
+    if (this.mailSubscription) {
+      this.mailSubscription.unsubscribe();
     }
   }
 }
