@@ -18,14 +18,6 @@
           <div class="ml-4">
             <h1 class="text-xl font-semibold text-gray-800">Admin Dashboard</h1>
           </div>
-          <a 
-            href="/home"
-            class="btn btn-primary flex items-center gap-2 font-bold ml-8 h-10 items-center"
-            style="align-self: center;"
-          >
-            <fa-icon [icon]="logoutIcon"></fa-icon>
-            Về Trang Chủ
-          </a>
         </div>
 
         <!-- Right: User Info & Actions -->
@@ -39,14 +31,38 @@
             <span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
           </button>
 
-          <!-- User Profile -->
-          <div class="flex items-center gap-3">
+          <!-- User Profile with Avatar Dropdown -->
+          <div class="relative flex items-center gap-3">
             <div class="hidden sm:block text-right">
-              <p class="text-sm font-medium text-gray-800">Admin User</p>
-              <p class="text-xs text-gray-500">admin@example.com</p>
+              <p class="text-sm font-medium text-gray-800">{{ userName() || 'Admin User' }}</p>
+              <p class="text-xs text-gray-500">{{ userEmail() || 'admin@example.com' }}</p>
             </div>
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-md">
-              AU
+            <!-- Avatar Dropdown -->
+            <div class="relative">
+              <button type="button"
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-md focus:outline-none"
+                (click)="toggleAvatarDropdown()"
+                aria-label="Mở menu tài khoản"
+              >
+                {{ getUserInitials() }}
+              </button>
+
+              <!-- Dropdown Content -->
+              <div
+                *ngIf="isAvatarDropdownOpen"
+                class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-40"
+                (clickOutside)="isAvatarDropdownOpen = false"
+              >
+                <button
+                  (click)="logout(); isAvatarDropdownOpen = false"
+                  class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition"
+                  aria-label="Đăng xuất"
+                  type="button"
+                >
+                  <fa-icon [icon]="logoutIcon" class="w-4 h-4"></fa-icon>
+                  <span>Đăng xuất</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

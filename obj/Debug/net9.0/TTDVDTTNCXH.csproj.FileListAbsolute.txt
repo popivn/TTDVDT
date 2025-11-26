@@ -141,6 +141,8 @@ C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-errirkhbyb.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\fpfgpyixdl-nolsmj2xqq.gz
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\wqbyssic0o-ne7vy5h3i6.gz
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\package-lock.json
+C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\package.json
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-2imlojgjpb.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\h4tb6zg774-wxhivzjae7.gz

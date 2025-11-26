@@ -14,7 +14,7 @@ namespace TTDVDTTNCXH.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(int userId, string email)
+        public string GenerateToken(int userId, string email, string name)
         {
             var jwtSecret = _configuration["Jwt:Secret"] ?? "your-super-secret-key-min-32-characters-long-for-security-change-this-in-production";
             var jwtIssuer = _configuration["Jwt:Issuer"] ?? "TTDVDTTNCXH";
@@ -24,7 +24,8 @@ namespace TTDVDTTNCXH.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Email, email),
+                new Claim("email", email), // Custom claim để frontend có thể decode trực tiếp
+                new Claim("name", name), // Custom claim để frontend có thể decode trực tiếp
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

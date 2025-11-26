@@ -79,7 +79,7 @@ namespace TTDVDTTNCXH.Services
             }
 
             // Generate JWT token
-            var token = _tokenService.GenerateToken(user.Id, user.Email);
+            var token = _tokenService.GenerateToken(user.Id, user.Email, user.Name);
 
             return new LoginResponse
             {

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
 export interface RegisterRequest {
   name: string;
@@ -21,6 +22,10 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface UserInfo {
+  name: string;
+  email: string;
+}
 export interface LoginResponse {
   success: boolean;
   message: string;
@@ -43,6 +48,40 @@ export class AuthService {
   private apiUrl = 'api/auth';
   private readonly TOKEN_KEY = 'token';
 
+  private getUserInfo(): Observable<UserInfo | null> {
+    const token = this.getToken();
+    
+    if (!token) {
+      return of(null);
+    }
+
+    try {
+      const decoded: any = jwtDecode(token);
+      
+      const userInfo: UserInfo = {
+        name: decoded.name || 
+              decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 
+              null,
+        email: decoded.email || 
+               decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || 
+               null
+      };
+      
+      return of(userInfo);
+    } catch (error) {
+      return of(null);
+    }
+  }
+  getUserName(): Observable<string | null> {
+    return this.getUserInfo().pipe(
+      map(userInfo => userInfo?.name || null)
+    );
+  }
+  getUserEmail(): Observable<string | null> {
+    return this.getUserInfo().pipe(
+      map(userInfo => userInfo?.email || null)
+    );
+  }
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request);
   }
