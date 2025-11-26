@@ -9,6 +9,7 @@
     RUN dotnet restore
     
     # Copy chỉ những file cần thiết cho .NET build
+    COPY Attributes/ ./Attributes/
     COPY Controllers/ ./Controllers/
     COPY Commands/ ./Commands/
     COPY Data/ ./Data/
