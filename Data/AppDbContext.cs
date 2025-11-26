@@ -16,6 +16,7 @@ namespace TTDVDTTNCXH.Data
         public DbSet<Setting> Settings { get; set; } // bảng Settings
         public DbSet<Faculty> Faculties { get; set; } // bảng Faculties
         public DbSet<Classroom> Classrooms { get; set; } // bảng Classrooms
+        public DbSet<Registration> Registrations { get; set; } // bảng Registrations
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,20 @@ namespace TTDVDTTNCXH.Data
                 .HasOne(c => c.Classroom)
                 .WithMany()
                 .HasForeignKey(c => c.ClassId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            // Cấu hình relationship giữa Registration và Classroom
+            modelBuilder.Entity<Registration>()
+                .HasOne(r => r.Classroom)
+                .WithMany()
+                .HasForeignKey(r => r.ClassroomId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            // Cấu hình relationship giữa Registration và Course
+            modelBuilder.Entity<Registration>()
+                .HasOne(r => r.Course)
+                .WithMany()
+                .HasForeignKey(r => r.CourseId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

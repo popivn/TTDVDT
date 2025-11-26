@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TTDVDTTNCXH.DTOs;
 using TTDVDTTNCXH.Services;
+using TTDVDTTNCXH.Attributes;
 
 namespace TTDVDTTNCXH.Controllers
 {
@@ -20,6 +21,7 @@ namespace TTDVDTTNCXH.Controllers
         }
 
         [HttpPost("register")]
+        [RequireApiKey]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
         {
             try
@@ -57,6 +59,7 @@ namespace TTDVDTTNCXH.Controllers
         }
 
         [HttpPost("login")]
+        [RequireApiKey]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
             try

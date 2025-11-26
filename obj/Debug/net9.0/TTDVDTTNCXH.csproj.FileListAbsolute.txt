@@ -132,7 +132,6 @@ C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\p68q44pfu7-vagikyz9qx.
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\rjguv5lbbx-1dks0wz7uz.gz
 C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xug5pupcsj-tvy3j3n584.gz
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\ClientApp\proxy.conf.json
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\gpqja5y3o9-73od3kg5df.gz
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
@@ -141,8 +140,9 @@ C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\wqbyssic0o-ne7vy5h3i6.gz
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\package-lock.json
 C:\Workspace\.Net\TTDVDTTNCXH\bin\Debug\net9.0\package.json
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-2imlojgjpb.gz
-C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\h4tb6zg774-wxhivzjae7.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\gpqja5y3o9-b3sngdmaxc.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\xditzg7g3q-e80yoal2y9.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\4s0ojmd5n9-8o6zf7edyk.gz
+C:\Workspace\.Net\TTDVDTTNCXH\obj\Debug\net9.0\compressed\e2vgln2nnp-lyqrh6vqm5.gz
